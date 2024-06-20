@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Регистрация
+{% endblock %}
+
+{% block body %}
+
+<form method="POST">
+    <div style="width: 400px; text-align: center; margin: 0 auto;">
+        <h1>Регистрация</h1><br>
+        <input type="text" id="login" name="login" class="form-control" placeholder="Ваш логин"><br>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Придумайте пароль"><br>
+        <input type="password" id="password2" name="password2" class="form-control" placeholder="Подтвердите пароль"><br>
+        <input type="checkbox" id="is_admin" name="is_admin" value="1">
+        <label for="is_admin">Администратор</label><br><br>
+        <p>Есть аккаунта? <a href="/login">Войти</a></p>
+        <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ product.title }}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">{{ product.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <p>{{ product.description|safe }}</p>
+                    <h5 class="card-title pricing-card-title">{{ product.price }} руб.</h5>
+
+                    <div class="mt-4 d-flex gap-2">
+                        {% if product.id in cart_product_ids %}
+                            <form action="{{ url_for('remove_from_cart', cart_item_id=cart_item.id) }}" method="POST" class="d-flex align-items-center">
+                                <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-danger" type="submit">
+                                    Удалить из корзины
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex align-items-center">
+                                <input type="number" name="quantity" value="1" min="1" class="form-control" style="max-width: 80px; margin-right: 10px;" required>
+                                <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-primary" type="submit">
+                                    Добавить в корзину
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-flex">
+                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-danger' }}" type="submit">
+                                {% if product.id in favorite_product_ids %}
+                                Удалить из избранного
+                                {% else %}
+                                Добавить в избранное
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

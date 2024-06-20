@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход{% endblock %}
+
+{% block body %}
+
+<form method="POST">
+    <div style="width: 400px; text-align: center; margin: 0 auto;">
+        <h1>Войти</h1>
+        <input type="text" id="login" name="login" class="form-control" placeholder="User name"><br>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password"><br>
+        <p>Нету аккаунта? <a href="/register">Зарегистрироваться</a></p>
+        <button type="submit" class="btn btn-success">Войти</button>
+    </div>
+</form>
+
+{% endblock %}

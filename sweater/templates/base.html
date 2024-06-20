@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>{% block title %} {% endblock %}</title>
+    <style>
+        .nav-item {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 1399px) {
+            .menu-btn {
+                display: block;
+                background-color: transparent;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                margin-left: auto;
+                align-self: center;
+            }
+
+            .nav-pills {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background-color: white;
+                padding-top: 60px;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+                z-index: 1;
+            }
+
+            .nav-pills.show {
+                display: flex;
+            }
+
+            .nav-item {
+                margin-right: 0;
+                margin-bottom: 10px;
+                width: 190px;
+                text-align: center;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .menu-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+<header class="header d-flex align-items-center flex-wrap justify-content-between py-3 mb-4 border-bottom">
+        <div class="d-flex align-items-center">
+            <a href="/" class=" link-body-emphasis text-decoration-none">
+            <span class="fs-1">Top Shmot</span>
+            </a>
+            <button style="outline-style: auto; margin-left: 10px;" class="menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+        <ul class="nav nav-pills">
+        {% if current_user.is_authenticated %}
+            <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Главная страница</a></li>
+            <li class="nav-item"><a href="/product" class="nav-link active">Товары</a></li>
+            <li class="nav-item"><a href="/cart" class="nav-link active">Корзина</a></li>
+            <li class="nav-item"><a href="/favorites" class="nav-link active">Избранные товары</a></li>
+            <li class="nav-item"><a href="/about" class="nav-link active">О нас</a></li>
+            <li class="nav-item"><a href="/logout" class="nav-link active">Выйти</a></li>
+            {% endif %}
+            {% if current_user.is_admin %}
+            <li class="nav-item"><a href="/categories" class="nav-link active">Категории</a></li>
+            <li class="nav-item"><a href="/new-product" class="nav-link active">Новые товары</a></li>
+            {% endif %}
+        </ul>
+    </header>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: red;" class="flash-message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+    {% block body %}
+    {% endblock %}
+
+    {% if current_user.is_authenticated %}
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li style="width: 150px" class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Главная страница</a></li>
+            <li style="width: 70px" class="nav-item"><a href="/product" class="nav-link px-2 text-body-secondary">Товары</a></li>
+            <li style="width: 155px" class="nav-item"><a href="/about" class="nav-link px-2 text-body-secondary">О нашем магазине</a></li>
+        </ul>
+        <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+    </footer>
+    {% endif %}
+
+<script>
+    setTimeout(function() {
+        var flashMessages = document.getElementsByClassName('flash-message');
+        for (var i = 0; i < flashMessages.length; i++) {
+            flashMessages[i].style.display = 'none';
+        }
+    }, 5000); // 5000 миллисекунд = 5 секунд
+</script>
+
+    <script>
+        function toggleMenu() {
+            var nav = document.querySelector('.nav-pills');
+            nav.classList.toggle('show');
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

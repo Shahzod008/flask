@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Новый товар
+{% endblock %}
+
+{% block body %}
+<h1>Добавление товара</h1><br>
+<form method="post">
+    <input type="text" id="title" name="title" class="form-control" placeholder="Название товара"><br>
+    <input type="number" id="price" name="price" class="form-control" placeholder="Цена товара"><br>
+    <input type="text" id="ideal" name="ideal" class="form-control" placeholder="Для чего больше всего подходит данный товар?"><br>
+    <input type="text" id="material" name="material" class="form-control" placeholder="Материал"><br>
+    <input type="text" id="size" name="size" class="form-control" placeholder="Размер"><br>
+    <input type="text" id="washing_temperature" name="washing_temperature" class="form-control" placeholder="Температура стирки"><br>
+    <input type="text" id="ironing_temperature" name="ironing_temperature" class="form-control" placeholder="Температура глажки"><br>
+    <input type="text" id="equipment" name="equipment" class="form-control" placeholder="Комплектация"><br>
+    <input type="text" id="warranty_date" name="warranty_date" class="form-control" placeholder="Срок гарантии в месяцах"><br>
+    <textarea id="intro" name="intro" class="form-control" placeholder="Микро описание"></textarea><br>
+    <textarea id="description" name="description" class="form-control" placeholder="Описание"></textarea><br>
+
+    <div class="input-group mb-3">
+        <h3 class="me-4">Выберите категорию товара:</h3>
+        <select name="category_id" class="form-select me-2" required>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select><br><br>
+    </div>
+
+    <button class="btn btn-success">Добавить</button>
+</form>
+
+<script>
+    function updateDescription() {
+        var title = document.getElementById('title').value;
+        var ideal = document.getElementById('ideal').value;
+        var material = document.getElementById('material').value;
+        var size = document.getElementById('size').value;
+        var washing_temperature = document.getElementById('washing_temperature').value;
+        var ironing_temperature = document.getElementById('ironing_temperature').value;
+        var equipment = document.getElementById('equipment').value;
+        var warranty_date = document.getElementById('warranty_date').value;
+
+        var descriptionTemplate = `Название товара: ${title}
+
+Описание:
+${title} - это стильный и качественный элемент гардероба, идеально подходящий для ${ideal}. Изготовлена из высококачественных материалов, обеспечивающих комфорт и долговечность.<br><br>
+
+<b>Характеристики:</b><br><br>
+
+<b>Материал</b>: ${material}<br>
+<b>Размеры</b>: ${size}<br>
+<b>Цвет</b>: [Цвет]<br>
+<b>Дизайн</b>: [Дизайн]<br><br>
+Преимущества:<br><br>
+
+Качество: ${title} изготовлена из ${material}, обеспечивающего долгий срок службы и устойчивость к износу.<br>
+Комфорт: Благодаря ${material} и [дизайн], одежда обеспечивает комфортное ношение в течение всего дня.<br>
+Универсальность: Идеально подходит для ${ideal}.<br>
+Стиль: [Описание стиля, соответствующего модным тенденциям и личным предпочтениям].<br><br>
+Уход за изделием:<br><br>
+
+Машинная стирка при ${washing_temperature}.<br>
+Гладить при ${ironing_temperature}.<br>
+Не отбеливать.<br>
+Сушить в тени.<br><br>
+
+Комплектация:<br>
+${equipment}<br><br>
+
+Гарантия и обслуживание:<br>
+Мы предоставляем гарантию на ${title} сроком на ${warranty_date}. Также у нас есть сервисное обслуживание и поддержка клиентов.`;
+
+        document.getElementById('description').value = descriptionTemplate;
+    }
+
+    document.getElementById('title').addEventListener('input', updateDescription);
+    document.getElementById('ideal').addEventListener('input', updateDescription);
+    document.getElementById('material').addEventListener('input', updateDescription);
+    document.getElementById('size').addEventListener('input', updateDescription);
+    document.getElementById('washing_temperature').addEventListener('input', updateDescription);
+    document.getElementById('ironing_temperature').addEventListener('input', updateDescription);
+    document.getElementById('equipment').addEventListener('input', updateDescription);
+    document.getElementById('warranty_date').addEventListener('input', updateDescription);
+</script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Главная страница
+{% endblock %}
+
+{% block body %}
+
+<h1>Добавить новую категорию</h1><br>
+<form method="POST">
+    <input type="text" class="form-control" name="name" placeholder="Названии категории" required><br>
+    <input type="submit" class="btn btn-success" value="Добавить новую категорию"><br><br><hr>
+</form>
+
+<h1>Список актуальных категорий</h1>
+    {% if num_categories <= 0 %}
+        <p style="color: red;">В данный момент нет категории</p>
+    {% elif num_categories >= 0 %}
+
+        {% for category in categories %}
+        <h4>
+            - {{category.name}}
+            <a href="{{ url_for('delete_category', id=category.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+        </h4>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

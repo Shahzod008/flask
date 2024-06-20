@@ -1,0 +1,15 @@
+<!-- favorites.html -->
+{% extends "base.html" %}
+{% block body %}
+<h1>Избранное</h1>
+<ul>
+    {% for favorite in favorites %}
+    <li>
+        {{ favorite.product.title }}
+        <form action="{{ url_for('remove_from_favorites', product_id=favorite.product.id) }}" method="POST">
+            <button type="submit">Удалить из избранного</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
