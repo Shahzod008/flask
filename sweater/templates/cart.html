@@ -6,7 +6,6 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h2>Ваша корзина</h2>
     {% if cart_items %}
         <table class="table">
             <thead>
@@ -43,7 +42,7 @@
         </table>
         <a href="#" class="btn btn-success">Перейти к оформлению</a>
     {% else %}
-        <p>Ваша корзина пуста.</p>
+        <h2>Ваша пуста</h2>
     {% endif %}
 </div>
 {% endblock %}

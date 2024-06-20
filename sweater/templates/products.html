@@ -6,7 +6,6 @@
 
 {% block body %}
 {% if num_product <= 0 %}
-    <br>
     <h1>Сегодня нет товаров</h1>
 {% else %}
     <form method="GET" action="/product" class="needs-validation mb-4" id="filterForm">
@@ -25,7 +24,7 @@
     <hr>
 {% endif %}
 
-<div class="row row-cols-1 row-cols-md-3 mb-3">
+<div class="row row-cols-1 row-cols-md-3 g-4">
     {% for product in products %}
         <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
