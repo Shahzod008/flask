@@ -10,7 +10,7 @@
     <h1>Регистрация</h1><br>
     {{ form.csrf_token }}
     <div class="mb-2">
-        {{ form.login(class="form-control" + ( ' is-invalid' if form.login.errorselse '' ), placeholder="Ваш логин") }}
+        {{ form.login(class="form-control" + ( ' is-invalid' if form.login.errors else '' ), placeholder="Ваш логин") }}
         {% if form.login.errors %}
             {% for error in form.login.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -18,7 +18,7 @@
         {% endif %}
     </div>
     <div class="mb-2">
-        {{ form.password(class="form-control" + ( ' is-invalid' if form.password.errorselse '' ), placeholder="Придумайте пароль") }}
+        {{ form.password(class="form-control" + ( ' is-invalid' if form.password.errors else '' ), placeholder="Придумайте пароль") }}
         {% if form.password.errors %}
             {% for error in form.password.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -26,7 +26,7 @@
         {% endif %}
     </div>
     <div class="mb-2">
-        {{ form.password2(class="form-control" + ( ' is-invalid' if form.password2.errorselse '' ), placeholder="Подтвердите пароль") }}
+        {{ form.password2(class="form-control" + ( ' is-invalid' if form.password2.errors else '' ), placeholder="Подтвердите пароль") }}
         {% if form.password2.errors %}
             {% for error in form.password2.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
