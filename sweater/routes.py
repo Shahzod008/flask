@@ -125,6 +125,30 @@ def detail_product(id):
     )
 
 
+@app.route("/search", methods=['GET'])
+@login_required
+def search():
+    query = request.args.get('query')
+
+    if query:
+        products = Product.query.filter(
+            (Product.title.ilike(f"%{query}%")) | (Product.id == query)
+        ).all()
+    else:
+        products = []
+
+    num_product = len(products)
+    favorite_product_ids = [fav.product_id for fav in current_user.favorites]
+
+    return render_template(
+        "search_results.html",
+        products=products,
+        num_product=num_product,
+        favorite_product_ids=favorite_product_ids,
+        query=query
+    )
+
+
 @app.route("/new-product", methods=['POST', 'GET'])
 @login_required
 def new_product():

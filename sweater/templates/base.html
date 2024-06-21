@@ -73,66 +73,88 @@
                 display: none;
             }
         }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .search-button {
+            min-width: 100px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-<header class="header d-flex align-items-center flex-wrap justify-content-between py-3 mb-4 border-bottom">
+    <header class="header d-flex align-items-center justify-content-between py-3 mb-4 border-bottom">
         <div class="d-flex align-items-center">
-            <a href="/" class=" link-body-emphasis text-decoration-none">
-            <span class="fs-1">Top Shmot</span>
+            <a href="/" class="link-body-emphasis text-decoration-none">
+                <span class="fs-1">Top Shmot</span>
             </a>
             {% if current_user.is_authenticated %}
-            <button style="outline-style: auto; margin-left: 10px;" class="menu-btn" onclick="toggleMenu()">☰</button>
+                <button style="outline-style: auto; margin-left: 10px;" class="menu-btn" onclick="toggleMenu()">☰</button>
             {% endif %}
         </div>
+
+
         <ul class="nav nav-pills">
-        {% if current_user.is_authenticated %}
-            <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Главная страница</a></li>
-            <li class="nav-item"><a href="/product" class="nav-link active">Товары</a></li>
-            <li class="nav-item"><a href="/cart" class="nav-link active">Корзина</a></li>
-            <li class="nav-item"><a href="/favorites" class="nav-link active">Избранные товары</a></li>
-            <li class="nav-item"><a href="/about" class="nav-link active">О нас</a></li>
-            <li class="nav-item"><a href="/logout" class="nav-link active">Выйти</a></li>
+            {% if current_user.is_authenticated %}
+                <li style="margin: 10px" class="nav-item"><a href="/" class="nav-link active" aria-current="page">Главная страница</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/product" class="nav-link active">Товары</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/cart" class="nav-link active">Корзина</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/favorites" class="nav-link active">Избранные товары</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/about" class="nav-link active">О нас</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/logout" class="nav-link active">Выйти</a></li>
             {% endif %}
             {% if current_user.is_admin %}
-            <li class="nav-item"><a href="/categories" class="nav-link active">Категории</a></li>
-            <li class="nav-item"><a href="/new-product" class="nav-link active">Новые товары</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/categories" class="nav-link active">Категории</a></li>
+                <li style="margin: 10px" class="nav-item"><a href="/new-product" class="nav-link active">Новые товары</a></li>
             {% endif %}
         </ul>
+        <form action="{{ url_for('search') }}" method="GET" class="search-form d-flex">
+            <input class="form-control me-2 search-input" type="search" placeholder="Поиск товаров" aria-label="Поиск" name="query">
+            <button class="btn btn-outline-success search-button" type="submit">Найти</button>
+        </form>
     </header>
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color: red;" class="flash-message">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                {% for message in messages %}
+                    {{ message }}<br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     {% block body %}
     {% endblock %}
 
     {% if current_user.is_authenticated %}
-    <footer class="py-3 my-4">
-        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li style="width: 150px" class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Главная страница</a></li>
-            <li style="width: 70px" class="nav-item"><a href="/product" class="nav-link px-2 text-body-secondary">Товары</a></li>
-            <li style="width: 155px" class="nav-item"><a href="/about" class="nav-link px-2 text-body-secondary">О нашем магазине</a></li>
-        </ul>
-        <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
-    </footer>
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li style="width: 150px" class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Главная страница</a></li>
+                <li style="width: 70px" class="nav-item"><a href="/product" class="nav-link px-2 text-body-secondary">Товары</a></li>
+                <li style="width: 155px" class="nav-item"><a href="/about" class="nav-link px-2 text-body-secondary">О нашем магазине</a></li>
+            </ul>
+            <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+        </footer>
     {% endif %}
 
-<script>
-    setTimeout(function() {
-        var flashMessages = document.getElementsByClassName('flash-message');
-        for (var i = 0; i < flashMessages.length; i++) {
-            flashMessages[i].style.display = 'none';
-        }
-    }, 5000); // 5000 миллисекунд = 5 секунд
-</script>
+    <script>
+        setTimeout(function() {
+            var flashMessages = document.getElementsByClassName('alert');
+            for (var i = 0; i < flashMessages.length; i++) {
+                flashMessages[i].style.display = 'none';
+            }
+        }, 5000); // 5000 миллисекунд = 5 секунд
+    </script>
 
     <script>
         function toggleMenu() {
