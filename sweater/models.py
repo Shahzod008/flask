@@ -30,6 +30,16 @@ class Product(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     category = db.relationship('Category', back_populates='products')
 
+    images = db.relationship('ProductImage', backref='products', lazy=True, cascade="all, delete-orphan")
+
+
+class ProductImage(db.Model):
+    __tablename__ = "product_images"
+
+    id = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.String, nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+
 
 class Favorite(db.Model):
     __tablename__ = 'favorites'

@@ -9,8 +9,8 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">{{ product.title }}</h4>
+                <div class="card-img-top">
+                    {% include 'product-carousel.html' %}
                 </div>
                 <div class="card-body">
                     <p>{{ product.description|safe }}</p>

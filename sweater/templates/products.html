@@ -23,31 +23,7 @@
     </form>
     <hr>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for product in products %}
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div style="justify-content: space-between;" class="card-header py-3 d-flex align-items-center">
-                    <h4 class="my-0 fw-normal">{{ product.title }}</h4>
-                    <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
-                        <button class="btn btn-outline-secondary" style="font-size: 14px;" type="submit">
-                            {% if product.id in favorite_product_ids %}
-                                Удалить из избранного
-                            {% else %}
-                                Добавить в избранное
-                            {% endif %}
-                        </button>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <p>{{ product.intro }}</p>
-                    <h3 class="card-title pricing-card-title text-end">{{ product.price }}<small class="text-muted">₽</small></h3>
-                    <a href="{{ url_for('detail_product', id=product.id) }}" class="w-100 btn btn-lg btn-outline-primary">Подробнее</a><br><br>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</div>
+{% include 'product-cards-container.html' %}
 {% endif %}
 
 {% endblock %}
