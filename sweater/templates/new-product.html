@@ -6,9 +6,11 @@
 
 {% block body %}
 <h1>Добавление товара</h1><br>
-<form method="post">
-    <div class="mb-2">
+<form method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="mb-2 form-floating">
         {{ form.title(class="form-control" + ( ' is-invalid' if form.title.errors else '' ), placeholder="Название товара") }}
+        {{ form.title.label }}
         {% if form.title.errors %}
             {% for error in form.title.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -16,8 +18,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.price(class="form-control" + ( ' is-invalid' if form.price.errors else '' ), placeholder="Цена товара") }}
+        {{ form.price.label }}
         {% if form.price.errors %}
             {% for error in form.price.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -25,8 +28,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.ideal(class="form-control" + ( ' is-invalid' if form.ideal.errors else '' ), placeholder="Для чего больше всего подходит данный товар?") }}
+        {{ form.ideal.label }}
         {% if form.ideal.errors %}
             {% for error in form.ideal.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -34,8 +38,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.material(class="form-control" + ( ' is-invalid' if form.material.errors else '' ), placeholder="Материал") }}
+        {{ form.material.label }}
         {% if form.material.errors %}
             {% for error in form.material.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -43,8 +48,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.size(class="form-control" + ( ' is-invalid' if form.size.errors else '' ), placeholder="Размер") }}
+        {{ form.size.label }}
         {% if form.size.errors %}
             {% for error in form.size.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -52,8 +58,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.washing_temperature(class="form-control" + ( ' is-invalid' if form.washing_temperature.errors else '' ), placeholder="Температура стирки") }}
+        {{ form.washing_temperature.label }}
         {% if form.washing_temperature.errors %}
             {% for error in form.washing_temperature.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -61,8 +68,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.ironing_temperature(class="form-control" + ( ' is-invalid' if form.ironing_temperature.errors else '' ), placeholder="Температура глажки") }}
+        {{ form.ironing_temperature.label }}
         {% if form.ironing_temperature.errors %}
             {% for error in form.ironing_temperature.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -70,8 +78,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.equipment(class="form-control" + ( ' is-invalid' if form.equipment.errors else '' ), placeholder="Комплектация") }}
+        {{ form.equipment.label }}
         {% if form.equipment.errors %}
             {% for error in form.equipment.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -79,8 +88,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.warranty_date(class="form-control" + ( ' is-invalid' if form.warranty_date.errors else '' ), placeholder="Срок гарантии в месяцах") }}
+        {{ form.warranty_date.label }}
         {% if form.warranty_date.errors %}
             {% for error in form.warranty_date.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -88,8 +98,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.intro(class="form-control" + ( ' is-invalid' if form.intro.errors else '' ), placeholder="Микро описание") }}
+        {{ form.intro.label }}
         {% if form.intro.errors %}
             {% for error in form.intro.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -97,8 +108,9 @@
         {% endif %}
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2 form-floating">
         {{ form.description(class="form-control" + ( ' is-invalid' if form.description.errors else '' ), placeholder="Описание") }}
+        {{ form.description.label }}
         {% if form.description.errors %}
             {% for error in form.description.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -111,6 +123,16 @@
         {{ form.category_id(class="form-select me-2", required=True) }}
         {% if form.category_id.errors %}
             {% for error in form.category_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.images.label(class="form-label") }}
+        {{ form.images(class="form-control" + ( ' is-invalid' if form.images.errors else '' )) }}
+        {% if form.images.errors %}
+            {% for error in form.images.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
         {% endif %}

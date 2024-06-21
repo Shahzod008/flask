@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms.fields.choices import SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.fields import MultipleFileField
 from wtforms.validators import DataRequired, EqualTo
 
 from sweater.models import Category
@@ -34,6 +35,7 @@ class ProductForm(FlaskForm):
     intro = TextAreaField('Микро описание', validators=[DataRequired()])
     description = TextAreaField('Описание', validators=[DataRequired()])
     category_id = SelectField('Категория', choices=[], validators=[DataRequired()])
+    images = MultipleFileField('Изображения товара', validators=[DataRequired()], render_kw={'multiple': True})
 
     # Пример получения категорий из базы данных (вам нужно будет реализовать это)
     def __init__(self, *args, **kwargs):

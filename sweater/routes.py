@@ -1,10 +1,16 @@
+import os.path
+
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
+
 from sweater import app, db, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from sweater.forms import SignUpForm, SignInForm, ProductForm
-from sweater.models import Product, Category, User, Favorite, CartItem
-from flask import render_template, request, redirect, flash, url_for
+from sweater.models import Product, Category, User, Favorite, CartItem, ProductImage
+from flask import render_template, request, redirect, flash, url_for, send_from_directory
+
+from sweater.utils import get_path_for_image
 
 
 @login_manager.unauthorized_handler
@@ -138,17 +144,40 @@ def new_product():
             category_id=category_id
         )
 
+        images = []
         try:
             db.session.add(product_new)
             db.session.commit()
+            folder = get_path_for_image("a.png", True)[0]
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+            for image in form.images.data:
+                secured_filename = secure_filename(image.filename)
+                image_path = get_path_for_image(secured_filename)
+                image.save(image_path)
+                # filename = str(image_num) + "_pr_" + str(product_new.id)
+                new_image = ProductImage(image=secured_filename, product_id=product_new.id)
+                db.session.add(new_image)
+                db.session.commit()
+                images.append(new_image)
             return redirect(request.referrer)
         except Exception as e:
+            db.session.delete(product_new)
+            db.session.commit()
+            for i in images:
+                db.session.delete(i)
+                db.session.commit()
             return f"Что-то пошло не так: {str(e)}"
     return render_template(
         template_name_or_list="new-product.html",
         # categories=Category.query.all(),
         form=form
     )
+
+
+@app.route("/product/img/<filename>")
+def product_image(filename):
+    return send_from_directory(*get_path_for_image(filename, True))
 
 
 @app.route('/login', methods=['POST', 'GET'])
