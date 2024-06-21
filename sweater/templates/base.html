@@ -64,7 +64,9 @@
             <a href="/" class=" link-body-emphasis text-decoration-none">
             <span class="fs-1">Top Shmot</span>
             </a>
+            {% if current_user.is_authenticated %}
             <button style="outline-style: auto; margin-left: 10px;" class="menu-btn" onclick="toggleMenu()">☰</button>
+            {% endif %}
         </div>
         <ul class="nav nav-pills">
         {% if current_user.is_authenticated %}
