@@ -6,17 +6,40 @@
 
 {% block body %}
 
-<form method="POST">
-    <div style="width: 400px; text-align: center; margin: 0 auto;">
-        <h1>Регистрация</h1><br>
-        <input type="text" id="login" name="login" class="form-control" placeholder="Ваш логин"><br>
-        <input type="password" id="password" name="password" class="form-control" placeholder="Придумайте пароль"><br>
-        <input type="password" id="password2" name="password2" class="form-control" placeholder="Подтвердите пароль"><br>
-        <input type="checkbox" id="is_admin" name="is_admin" value="1">
-        <label for="is_admin">Администратор</label><br><br>
-        <p>Есть аккаунта? <a href="/login">Войти</a></p>
-        <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+<form method="POST" class="w-sm-50">
+    <h1>Регистрация</h1><br>
+    {{ form.csrf_token }}
+    <div class="mb-2">
+        {{ form.login(class="form-control" + ( ' is-invalid' if form.login.errorselse '' ), placeholder="Ваш логин") }}
+        {% if form.login.errors %}
+            {% for error in form.login.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
     </div>
+    <div class="mb-2">
+        {{ form.password(class="form-control" + ( ' is-invalid' if form.password.errorselse '' ), placeholder="Придумайте пароль") }}
+        {% if form.password.errors %}
+            {% for error in form.password.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="mb-2">
+        {{ form.password2(class="form-control" + ( ' is-invalid' if form.password2.errorselse '' ), placeholder="Подтвердите пароль") }}
+        {% if form.password2.errors %}
+            {% for error in form.password2.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="mb-2">
+        {{ form.is_admin(class="form-check-input") }}
+        {{ form.is_admin.label(class="form-check-label") }}
+    </div>
+    <br><br>
+    <p>Есть аккаунта? <a href="/login">Войти</a></p>
+    <button type="submit" class="btn btn-success">Зарегистрироваться</button>
 </form>
 
 {% endblock %}

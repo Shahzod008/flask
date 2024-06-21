@@ -4,14 +4,27 @@
 
 {% block body %}
 
-<form method="POST">
-    <div style="width: 400px; text-align: center; margin: 0 auto;">
-        <h1>Войти</h1>
-        <input type="text" id="login" name="login" class="form-control" placeholder="User name"><br>
-        <input type="password" id="password" name="password" class="form-control" placeholder="Password"><br>
-        <p>Нету аккаунта? <a href="/register">Зарегистрироваться</a></p>
-        <button type="submit" class="btn btn-success">Войти</button>
+<form method="POST" class="w-50 mx-auto">
+    <h1>Войти</h1><br>
+    {{ form.csrf_token }}
+    <div class="mb-2">
+        {{ form.login(class="form-control" + ( ' is-invalid' if form.login.errors else '' ), placeholder="Ваш логин") }}
+        {% if form.login.errors %}
+            {% for error in form.login.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
     </div>
+    <div class="mb-2">
+        {{ form.password(class="form-control" + ( ' is-invalid' if form.password.errors else '' ), placeholder="Придумайте пароль") }}
+        {% if form.password.errors %}
+            {% for error in form.password.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <p>Нету аккаунта? <a href="/register">Зарегистрироваться</a></p>
+    <button type="submit" class="btn btn-success">Войти</button>
 </form>
 
 {% endblock %}

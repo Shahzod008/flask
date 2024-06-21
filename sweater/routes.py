@@ -2,6 +2,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from sweater import app, db, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from sweater.forms import SignUpForm, SignInForm, ProductForm
 from sweater.models import Product, Category, User, Favorite, CartItem
 from flask import render_template, request, redirect, flash, url_for
 
@@ -121,14 +122,15 @@ def detail_product(id):
 @app.route("/new-product", methods=['POST', 'GET'])
 @login_required
 def new_product():
-    if request.method == "POST":
-        title = request.form['title']
-        price = request.form['price']
-        size = request.form['size']
-        ideal = request.form['ideal']
-        intro = request.form['intro']
-        description = request.form['description']
-        category_id = request.form['category_id']
+    form = ProductForm()
+    if form.validate_on_submit():
+        title = form.data['title']
+        price = form.data['price']
+        size = form.data['size']
+        ideal = form.data['ideal']
+        intro = form.data['intro']
+        description = form.data['description']
+        category_id = form.data['category_id']
 
         product_new = Product(
             title=title, price=price, size=size,
@@ -142,18 +144,19 @@ def new_product():
             return redirect(request.referrer)
         except Exception as e:
             return f"Что-то пошло не так: {str(e)}"
-    else:
-        return render_template(
-            template_name_or_list="new-product.html",
-            categories=Category.query.all()
-        )
+    return render_template(
+        template_name_or_list="new-product.html",
+        # categories=Category.query.all(),
+        form=form
+    )
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login_page():
-    if request.method == "POST":
-        login = request.form.get('login')
-        password = request.form.get('password')
+    form = SignInForm()
+    if form.validate_on_submit():
+        login = form.data["login"]
+        password = form.data["password"]
 
         if login and password:
             user = User.query.filter_by(login=login).first()
@@ -167,7 +170,7 @@ def login_page():
         else:
             flash('Пожалуйста, введите логин и пароль')
 
-    return render_template('login.html')
+    return render_template('login.html', form=form)
 
 
 @app.after_request
@@ -179,27 +182,22 @@ def redirect_to_signin(response):
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    if request.method == "POST":
-        login = request.form.get('login')
-        password = request.form.get('password')
-        password2 = request.form.get('password2')
-        is_admin = request.form.get('is_admin')
+    form = SignUpForm()
+    if form.validate_on_submit():
+        login = form.data["login"]
+        password = form.data["password"]
+        is_admin = form.data["is_admin"]
 
-        if not (login and password and password2):
-            flash('Заполните все поля')
-        elif password != password2:
-            flash('Пароли не совпадают')
+        if User.query.filter_by(login=login).first():
+            flash('Пользователь с таким логином уже существует')
         else:
-            if User.query.filter_by(login=login).first():
-                flash('Пользователь с таким логином уже существует')
-            else:
-                hash_pwd = generate_password_hash(password)
-                new_user = User(login=login, password=hash_pwd, is_admin=bool(is_admin))
-                db.session.add(new_user), db.session.commit()
-                flash('Вы успешно зарегистрировались! Теперь войдите в систему.')
-                return redirect(url_for('login_page'))
+            hash_pwd = generate_password_hash(password)
+            new_user = User(login=login, password=hash_pwd, is_admin=bool(is_admin))
+            db.session.add(new_user), db.session.commit()
+            flash('Вы успешно зарегистрировались! Теперь войдите в систему.')
+            return redirect(url_for('login_page'))
 
-    return render_template('register.html')
+    return render_template('register.html', form=form)
 
 
 @app.route('/logout')

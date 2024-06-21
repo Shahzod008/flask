@@ -7,25 +7,113 @@
 {% block body %}
 <h1>Добавление товара</h1><br>
 <form method="post">
-    <input type="text" id="title" name="title" class="form-control" placeholder="Название товара"><br>
-    <input type="number" id="price" name="price" class="form-control" placeholder="Цена товара"><br>
-    <input type="text" id="ideal" name="ideal" class="form-control" placeholder="Для чего больше всего подходит данный товар?"><br>
-    <input type="text" id="material" name="material" class="form-control" placeholder="Материал"><br>
-    <input type="text" id="size" name="size" class="form-control" placeholder="Размер"><br>
-    <input type="text" id="washing_temperature" name="washing_temperature" class="form-control" placeholder="Температура стирки"><br>
-    <input type="text" id="ironing_temperature" name="ironing_temperature" class="form-control" placeholder="Температура глажки"><br>
-    <input type="text" id="equipment" name="equipment" class="form-control" placeholder="Комплектация"><br>
-    <input type="text" id="warranty_date" name="warranty_date" class="form-control" placeholder="Срок гарантии в месяцах"><br>
-    <textarea id="intro" name="intro" class="form-control" placeholder="Микро описание"></textarea><br>
-    <textarea id="description" name="description" class="form-control" placeholder="Описание"></textarea><br>
+    <div class="mb-2">
+        {{ form.title(class="form-control" + ( ' is-invalid' if form.title.errors else '' ), placeholder="Название товара") }}
+        {% if form.title.errors %}
+            {% for error in form.title.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.price(class="form-control" + ( ' is-invalid' if form.price.errors else '' ), placeholder="Цена товара") }}
+        {% if form.price.errors %}
+            {% for error in form.price.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.ideal(class="form-control" + ( ' is-invalid' if form.ideal.errors else '' ), placeholder="Для чего больше всего подходит данный товар?") }}
+        {% if form.ideal.errors %}
+            {% for error in form.ideal.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.material(class="form-control" + ( ' is-invalid' if form.material.errors else '' ), placeholder="Материал") }}
+        {% if form.material.errors %}
+            {% for error in form.material.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.size(class="form-control" + ( ' is-invalid' if form.size.errors else '' ), placeholder="Размер") }}
+        {% if form.size.errors %}
+            {% for error in form.size.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.washing_temperature(class="form-control" + ( ' is-invalid' if form.washing_temperature.errors else '' ), placeholder="Температура стирки") }}
+        {% if form.washing_temperature.errors %}
+            {% for error in form.washing_temperature.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.ironing_temperature(class="form-control" + ( ' is-invalid' if form.ironing_temperature.errors else '' ), placeholder="Температура глажки") }}
+        {% if form.ironing_temperature.errors %}
+            {% for error in form.ironing_temperature.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.equipment(class="form-control" + ( ' is-invalid' if form.equipment.errors else '' ), placeholder="Комплектация") }}
+        {% if form.equipment.errors %}
+            {% for error in form.equipment.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.warranty_date(class="form-control" + ( ' is-invalid' if form.warranty_date.errors else '' ), placeholder="Срок гарантии в месяцах") }}
+        {% if form.warranty_date.errors %}
+            {% for error in form.warranty_date.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.intro(class="form-control" + ( ' is-invalid' if form.intro.errors else '' ), placeholder="Микро описание") }}
+        {% if form.intro.errors %}
+            {% for error in form.intro.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.description(class="form-control" + ( ' is-invalid' if form.description.errors else '' ), placeholder="Описание") }}
+        {% if form.description.errors %}
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
     <div class="input-group mb-3">
         <h3 class="me-4">Выберите категорию товара:</h3>
-        <select name="category_id" class="form-select me-2" required>
-            {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
+        {{ form.category_id(class="form-select me-2", required=True) }}
+        {% if form.category_id.errors %}
+            {% for error in form.category_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
-        </select><br><br>
+        {% endif %}
     </div>
 
     <button class="btn btn-success">Добавить</button>
