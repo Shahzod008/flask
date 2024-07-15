@@ -10,34 +10,41 @@
         <div class="col-md-8 mx-auto">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-img-top">
-                    {% include 'product-carousel.html' %}
+                    <div id="productImagesFor{{product.id}}" class="carousel slide carousel-fade" data-bs-ride="carousel">
+   <div class="carousel-inner">
+       {% for image in product.images %}
+      <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
+        <img src="/product/img/{{image.image}}" style="width: 100%;" class="d-block" alt="Slide 1">
+      </div>
+       {% endfor %}
+   </div>
+   <a class="carousel-control-prev" href="#productImagesFor{{product.id}}" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+   </a>
+   <a class="carousel-control-next" href="#productImagesFor{{product.id}}" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+   </a>
+</div>
                 </div>
                 <div class="card-body">
                     <p>{{ product.description|safe }}</p>
                     <h5 class="card-title pricing-card-title">{{ product.price }} руб.</h5>
 
                     <div class="mt-4 d-flex gap-2">
-                        {% if product.id in cart_product_ids %}
-                            <form action="{{ url_for('remove_from_cart', cart_item_id=cart_item.id) }}" method="POST" class="d-flex align-items-center">
-                                <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-danger" type="submit">
-                                    Удалить из корзины
-                                </button>
-                            </form>
-                        {% else %}
-                            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex align-items-center">
-                                <input type="number" name="quantity" value="1" min="1" class="form-control" style="max-width: 80px; margin-right: 10px;" required>
-                                <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-primary" type="submit">
-                                    Добавить в корзину
-                                </button>
-                            </form>
-                        {% endif %}
-
-                        <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-flex">
-                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-danger' }}" type="submit">
-                                {% if product.id in favorite_product_ids %}
-                                Удалить из избранного
-                                {% else %}
+                        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
+                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ 'btn btn-outline-primary'}}" type="submit">
                                 Добавить в избранное
+                            </button>
+                        </form>
+
+                        <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
+                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-outline-danger' }}" type="submit">
+                                {% if product.id in favorite_product_ids %}
+                                    Удалить из избранного
+                                {% else %}
+                                    Добавить в избранное
                                 {% endif %}
                             </button>
                         </form>

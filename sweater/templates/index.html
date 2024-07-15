@@ -6,77 +6,49 @@
 
 {% block body %}
 
-        <div id="categoryCarousel" class="carousel slide" data-ride="carousel" data-interval="3">
-            <div class="carousel-inner">
-                {% for category in categories %}
-                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <a href="#">{{ category.name }}</a>
+{% if num_product <= 0 %}
+    <h2>Мой стиль - Магазин одежды</h2>
+{% else %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for product in products %}
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
+                        <div class="card-img-top">
+                            <div id="productImagesFor{{ product.id }}" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    {% for image in product.images %}
+                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                            <img src="/product/img/{{ image.image }}" style="width: 100%;" class="d-block" alt="Slide 1">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-end">
+                            <h4 class="my-0 fw-normal">{{ product.title }}</h4>
+                            <p>{{ product.intro }}</p>
+                            <h3 class="card-title pricing-card-title text-end">{{ product.price }}<small class="text-muted">₽</small></h3>
+                        </div>
+                    </a>
+                    <div class="card-footer d-flex">
+                        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
+                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ 'btn btn-outline-primary'}}" type="submit">Добавить в избранное</button>
+                        </form>
+
+                        <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
+                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-outline-danger' }}" type="submit">
+                                {% if product.id in favorite_product_ids %}
+                                    Удалить из избранного
+                                {% else %}
+                                    Добавить в избранное
+                                {% endif %}
+                            </button>
+                        </form>
                     </div>
-                {% endfor %}
-            </div>
-            <a class="carousel-control-prev" href="#categoryCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#categoryCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-
-
-
-{% if num_product <=0 %}
-<h2>Мой стиль - Магазин одежды</h2>
-{% elif num_product >0 %}
-
-
-
-
-<div class="cards-container">
-    {% for product in products %}
-    <div class="card mb-4 rounded-3 shadow-sm">
-        <div class="card-header py-3 d-flex align-items-center justify-content-between">
-            <h4 class="my-0 fw-normal">{{ product.title }}</h4>
-            <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
-                <button class="btn btn-outline-secondary" style="font-size: 14px;" type="submit">
-                    {% if product.id in favorite_product_ids %}
-                    Удалить из избранного
-                    {% else %}
-                    Добавить в избранное
-                    {% endif %}
-                </button>
-            </form>
-        </div>
-        <div class="card-img-top">
-            <div id="productImagesFor{{product.id}}" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for image in product.images %}
-                    <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
-                        <img src="/product/img/{{image.image}}" style="width: 100%;" class="d-block" alt="Slide 1">
-                    </div>
-                    {% endfor %}
                 </div>
-                <a class="carousel-control-prev" href="#productImagesFor{{product.id}}" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#productImagesFor{{product.id}}" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </a>
             </div>
-        </div>
-        <div class="card-body d-flex flex-column justify-content-end">
-            <div>
-                <p>{{ product.intro }}</p>
-                <h3 class="card-title pricing-card-title text-end">{{ product.price }}<small class="text-muted">₽</small></h3>
-                <a href="{{ url_for('detail_product', id=product.id) }}" class="w-100 btn btn-lg btn-outline-primary">Подробнее</a><br><br>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-
 {% endif %}
 {% endblock %}
