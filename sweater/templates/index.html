@@ -8,47 +8,46 @@
 
 {% if num_product <= 0 %}
     <h2>Мой стиль - Магазин одежды</h2>
+    <p>товары закончились зайдите по позже</p>
 {% else %}
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-        {% for product in products %}
-            <div class="col">
-                <div class="card mb-4 rounded-3 shadow-sm">
-                    <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
-                        <div class="card-img-top">
-                            <div id="productImagesFor{{ product.id }}" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    {% for image in product.images %}
-                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                            <img src="/product/img/{{ image.image }}" style="width: 100%;" class="d-block" alt="Slide 1">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-end">
-                            <h4 class="my-0 fw-normal">{{ product.title }}</h4>
-                            <p>{{ product.intro }}</p>
-                            <h3 class="card-title pricing-card-title text-end">{{ product.price }}<small class="text-muted">₽</small></h3>
-                        </div>
-                    </a>
-                    <div class="card-footer d-flex">
-                        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
-                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ 'btn btn-outline-primary'}}" type="submit">Добавить в избранное</button>
-                        </form>
-
-                        <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
-                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-outline-danger' }}" type="submit">
-                                {% if product.id in favorite_product_ids %}
-                                    Удалить из избранного
-                                {% else %}
-                                    Добавить в избранное
-                                {% endif %}
-                            </button>
-                        </form>
+<div>
+    {% for category in categories %}
+        <a href="{{ url_for('home', category_id=category.id) }}" class="{% if selected_category and selected_category|int == category.id %}selected{% endif %}">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    {% for product in products %}
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm h-100" style="height: 100%;">
+                <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
+                    <div class="image-container">
+                        <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
                     </div>
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="my-0 fw-bold">{{ product.title }}</h4>
+                        <h3 class="card-title pricing-card-title text-end">{{ product.price }}<small class="text-muted">₽</small></h3>
+                    </div>
+                </a>
+                <div class="card-footer d-flex" style="margin-top: auto;">
+                    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
+                        <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ 'btn btn-outline-primary'}}" type="submit">Добавить в корзину</button>
+                    </form>
+                    <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
+                        <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-outline-danger' }}" type="submit">
+                            {% if product.id in favorite_product_ids %}
+                                Удалить из избранного
+                            {% else %}
+                                Добавить в избранное
+                            {% endif %}
+                        </button>
+                    </form>
                 </div>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% endfor %}
+</div>
+
 {% endif %}
 {% endblock %}

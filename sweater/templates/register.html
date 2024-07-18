@@ -6,40 +6,81 @@
 
 {% block body %}
 
-<form method="POST" class="w-sm-50">
-    <h1>Регистрация</h1><br>
-    {{ form.csrf_token }}
-    <div class="mb-2">
-        {{ form.login(class="form-control" + ( ' is-invalid' if form.login.errors else '' ), placeholder="Ваш логин") }}
-        {% if form.login.errors %}
-            {% for error in form.login.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <div class="mb-2">
-        {{ form.password(class="form-control" + ( ' is-invalid' if form.password.errors else '' ), placeholder="Придумайте пароль") }}
-        {% if form.password.errors %}
-            {% for error in form.password.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <div class="mb-2">
-        {{ form.password2(class="form-control" + ( ' is-invalid' if form.password2.errors else '' ), placeholder="Подтвердите пароль") }}
-        {% if form.password2.errors %}
-            {% for error in form.password2.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <div class="mb-2">
-        {{ form.is_admin(class="form-check-input") }}
-        {{ form.is_admin.label(class="form-check-label") }}
-    </div>
-    <br><br>
-    <p>Есть аккаунта? <a href="/login">Войти</a></p>
-    <button type="submit" class="btn btn-success">Зарегистрироваться</button>
-</form>
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: auto;
+        padding: 2rem;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.5rem;
+        }
+        .form-control {
+            font-size: 0.9rem;
+        }
+        .btn {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-container {
+            padding: 1.5rem;
+        }
+        h1 {
+            font-size: 1.25rem;
+        }
+    }
+</style>
+
+<div class="form-container">
+    <form method="POST" class="text-center">
+        <h1>Зарегистрироваться</h1>
+        {{ form.csrf_token }}
+        <div class="mb-3">
+            {{ form.login(class="form-control" + ( ' is-invalid' if form.login.errors else '' ), placeholder="Ваш логин") }}
+            {% if form.login.errors %}
+                {% for error in form.login.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.password(class="form-control" + ( ' is-invalid' if form.password.errors else '' ), placeholder="Придумайте пароль") }}
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.password2(class="form-control" + ( ' is-invalid' if form.password2.errors else '' ), placeholder="Подтвердите пароль") }}
+            {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-check mb-3">
+            {{ form.is_admin(class="form-check-input") }}
+            {{ form.is_admin.label(class="form-check-label") }}
+        </div>
+        <div class="d-grid gap-2 mb-2">
+            <button type="submit" class="btn btn-primary btn-lg">Зарегистрироваться</button>
+        </div>
+        <p>Есть аккаунт? <a href="/login">Войти</a></p>
+    </form>
+</div>
 
 {% endblock %}

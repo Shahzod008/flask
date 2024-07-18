@@ -1,4 +1,5 @@
 import os.path
+import re
 
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
@@ -7,8 +8,8 @@ from sweater import app, db, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from sweater.forms import SignUpForm, SignInForm, ProductForm
-from sweater.models import Product, Category, User, Favorite, CartItem, ProductImage
-from flask import render_template, request, redirect, flash, url_for, send_from_directory
+from sweater.models import Product, Category, Gender, Country, Size, Season, User, Favorite, CartItem, ProductImage
+from flask import render_template, request, redirect, flash, url_for, send_from_directory, jsonify
 
 from sweater.utils import get_path_for_image
 
@@ -27,7 +28,7 @@ def add_to_favorites(product_id):
         db.session.add(favorite)
         db.session.commit()
     except Exception as e:
-        flash(f"Не удалось добавить в избранное: {str(e)}")
+        flash(f"Не удалось добавить в избранное: {str(e)}", "danger")
     return redirect(request.referrer)
 
 
@@ -39,9 +40,9 @@ def remove_from_favorites(product_id):
         try:
             db.session.delete(favorite)
             db.session.commit()
-            flash("Товар удален из избранного.")
+            flash("Товар удален из избранного.", "danger")
         except Exception as e:
-            flash(f"Не удалось удалить из избранного: {str(e)}")
+            flash(f"Не удалось удалить из избранного: {str(e)}", "danger")
     return redirect(request.referrer)
 
 
@@ -58,7 +59,7 @@ def add_to_cart(product_id):
         db.session.add(cart_item)
         db.session.commit()
     except Exception as e:
-        flash(f"Не удалось добавить в корзину: {str(e)}")
+        flash(f"Не удалось добавить в корзину: {str(e)}", "danger")
     return redirect(request.referrer)
 
 
@@ -71,7 +72,6 @@ def update_cart(cart_item_id):
     if quantity and quantity > 0:
         cart_item.quantity = quantity
         db.session.commit()
-        flash("Количество товара обновлено", "success")
     else:
         flash("Некорректное количество", "danger")
 
@@ -95,9 +95,10 @@ def remove_from_cart(cart_item_id):
 @app.route("/cart")
 @login_required
 def view_cart():
+    products = Product.query.order_by(Product.date.desc()).all()
     cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
     total_price = sum(item.product.price * item.quantity for item in cart_items)
-    return render_template("cart.html", cart_items=cart_items, total_price=total_price)
+    return render_template("cart.html", cart_items=cart_items, total_price=total_price, products=products)
 
 
 @app.route("/favorites")
@@ -108,45 +109,66 @@ def view_favorites():
 
 
 @app.route("/detail-product/<int:id>")
-@login_required
 def detail_product(id):
-    product = Product.query.get(id)
-    if not product:
-        flash("Товар не найден.", "danger")
-        return redirect(url_for('products'))
-
-    favorite_product_ids = [fav.product_id for fav in current_user.favorites]
-    cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=id).first()
+    product = Product.query.get_or_404(id)
+    favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
+    cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=id).first() if current_user.is_authenticated else None
 
     return render_template(
-        template_name_or_list="detail-product.html",
+        "detail-product.html",
         favorite_product_ids=favorite_product_ids,
-        cart_item=cart_item, product=product
+        cart_item=cart_item,
+        product=product
     )
 
 
 @app.route("/search", methods=['GET'])
-@login_required
 def search():
     query = request.args.get('query')
 
     if query:
         products = Product.query.filter(
-            (Product.title.ilike(f"%{query}%")) | (Product.id == query)
+            (Product.title.ilike(f"%{query}%")) |
+            (Product.description.ilike(f"%{query}%")) |
+            (Product.id == query)
         ).all()
     else:
         products = []
 
     num_product = len(products)
-    favorite_product_ids = [fav.product_id for fav in current_user.favorites]
+    favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
+
+    highlighted_products = []
+    for product in products:
+        highlighted_title = re.sub(f"({re.escape(query)})", r"<strong>\1</strong>", product.title, flags=re.IGNORECASE)
+        highlighted_description = re.sub(f"({re.escape(query)})", r"<strong>\1</strong>", product.description, flags=re.IGNORECASE)
+        highlighted_products.append({
+            'product': product,
+            'highlighted_title': highlighted_title,
+            'highlighted_description': highlighted_description
+        })
 
     return render_template(
         "search_results.html",
-        products=products,
+        products=highlighted_products,
         num_product=num_product,
         favorite_product_ids=favorite_product_ids,
         query=query
     )
+
+
+@app.route("/suggestions", methods=['GET'])
+def suggestions():
+    query = request.args.get('query', '')
+    if query:
+        products = Product.query.filter(
+            Product.title.ilike(f"%{query}%")
+        ).all()
+        suggestions = [product.title for product in products]
+    else:
+        suggestions = []
+
+    return jsonify(suggestions)
 
 
 @app.route("/new-product", methods=['POST', 'GET'])
@@ -154,24 +176,29 @@ def search():
 def new_product():
     form = ProductForm()
     if form.validate_on_submit():
-        title = form.data['title']
-        price = form.data['price']
-        size = form.data['size']
-        ideal = form.data['ideal']
-        intro = form.data['intro']
-        description = form.data['description']
-        category_id = form.data['category_id']
-
-        product_new = Product(
-            title=title, price=price, size=size,
-            ideal=ideal, intro=intro, description=description,
-            category_id=category_id
-        )
-
-        images = []
         try:
+            product_new = Product(
+                title=form.title.data,
+                price=form.price.data,
+                ideal=form.ideal.data,
+                warranty_date=form.warranty_date.data,
+                description=form.description.data,
+                category_id=form.category_id.data,
+                season_id=form.season_id.data,
+                size_id=form.size_id.data,
+                gender_id=form.gender_id.data,
+                country_id=form.country_id.data,
+                color=form.color.data,
+                price_discount=form.price_discount.data,
+                package_size=form.package_size.data,
+                brand=form.brand.data,
+                keywords=form.keywords.data
+            )
             db.session.add(product_new)
             db.session.commit()
+
+            # Handling images
+            images = []
             folder = get_path_for_image("a.png", True)[0]
             if not os.path.exists(folder):
                 os.makedirs(folder)
@@ -179,24 +206,17 @@ def new_product():
                 secured_filename = secure_filename(image.filename)
                 image_path = get_path_for_image(secured_filename)
                 image.save(image_path)
-                # filename = str(image_num) + "_pr_" + str(product_new.id)
                 new_image = ProductImage(image=secured_filename, product_id=product_new.id)
                 db.session.add(new_image)
-                db.session.commit()
                 images.append(new_image)
-            return redirect(request.referrer)
-        except Exception as e:
-            db.session.delete(product_new)
+
             db.session.commit()
-            for i in images:
-                db.session.delete(i)
-                db.session.commit()
+            return redirect(url_for('new_product'))
+
+        except Exception as e:
+            db.session.rollback()
             return f"Что-то пошло не так: {str(e)}"
-    return render_template(
-        template_name_or_list="new-product.html",
-        # categories=Category.query.all(),
-        form=form
-    )
+    return render_template("new-product.html", form=form)
 
 
 @app.route("/product/img/<filename>")
@@ -219,9 +239,9 @@ def login_page():
                 next_page = request.args.get('next')
                 return redirect(next_page or url_for('home'))
             else:
-                flash('Неверный логин или пароль')
+                flash('Неверный логин или пароль', "danger")
         else:
-            flash('Пожалуйста, введите логин и пароль')
+            flash('Пожалуйста, введите логин и пароль', "danger")
 
     return render_template('login.html', form=form)
 
@@ -242,12 +262,12 @@ def register():
         is_admin = form.data["is_admin"]
 
         if User.query.filter_by(login=login).first():
-            flash('Пользователь с таким логином уже существует')
+            flash('Пользователь с таким логином уже существует', "danger")
         else:
             hash_pwd = generate_password_hash(password)
             new_user = User(login=login, password=hash_pwd, is_admin=bool(is_admin))
             db.session.add(new_user), db.session.commit()
-            flash('Вы успешно зарегистрировались! Теперь войдите в систему.')
+            flash('Вы успешно зарегистрировались! Теперь войдите в систему.', "success")
             return redirect(url_for('login_page'))
 
     return render_template('register.html', form=form)
@@ -257,12 +277,10 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('Вы вышли из системы.')
     return redirect(url_for('login_page'))
 
 
 @app.route("/product")
-@login_required
 def products():
     category_id = request.args.get('category_id')
     if category_id:
@@ -272,7 +290,7 @@ def products():
 
     num_product = len(products)
     categories = Category.query.join(Product).group_by(Category.id).all()
-    favorite_product_ids = [fav.product_id for fav in current_user.favorites]
+    favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
     return render_template(
         template_name_or_list="products.html",
         favorite_product_ids=favorite_product_ids,
@@ -284,21 +302,27 @@ def products():
 
 
 @app.route("/")
-@login_required
 def home():
-    products = Product.query.order_by(Product.date.desc()).limit(9).all()
-    favorite_product_ids = [fav.product_id for fav in current_user.favorites]
+    category_id = request.args.get('category_id')
+    if category_id:
+        products = Product.query.filter_by(category_id=category_id).order_by(Product.date.desc()).all()
+    else:
+        products = Product.query.order_by(Product.date.desc()).limit(9).all()
+    categories = Category.query.join(Product).group_by(Category.id).all()
+    favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
     num_product = len(products)
+
     return render_template(
+        "index.html",
         favorite_product_ids=favorite_product_ids,
-        template_name_or_list="index.html",
         products=products,
+        categories=categories,
+        selected_category=category_id,
         num_product=num_product
     )
 
 
 @app.route("/about")
-@login_required
 def about():
     return render_template("about.html")
 
@@ -306,23 +330,108 @@ def about():
 @app.route("/categories", methods=['POST', 'GET'])
 @login_required
 def manage_categories():
+    error_message = None
     if request.method == "POST":
+        entity_type = request.form['entity_type']
         name = request.form['name']
 
         try:
-            db.session.add(Category(name=name))
-            db.session.commit()
-            return redirect('/categories')
+            if entity_type == 'category':
+                if not Category.query.filter_by(name=name).first():
+                    db.session.add(Category(name=name))
+                else:
+                    error_message = "Категория с таким именем уже существует."
+            elif entity_type == 'gender':
+                if not Gender.query.filter_by(name=name).first():
+                    db.session.add(Gender(name=name))
+                else:
+                    error_message = "Пол с таким именем уже существует."
+            elif entity_type == 'size':
+                if not Size.query.filter_by(name=name).first():
+                    db.session.add(Size(name=name))
+                else:
+                    error_message = "Размер с таким именем уже существует."
+            elif entity_type == 'season':
+                if not Season.query.filter_by(name=name).first():
+                    db.session.add(Season(name=name))
+                else:
+                    error_message = "Сезон с таким именем уже существует."
+            elif entity_type == 'country':
+                if not Country.query.filter_by(name=name).first():
+                    db.session.add(Country(name=name))
+                else:
+                    error_message = "Страна с таким именем уже существует."
+
+            if not error_message:
+                db.session.commit()
+                return redirect('/categories')
         except Exception as e:
-            return f"Что-то пошло не так: {str(e)}"
-    else:
-        categories = Category.query.all()
-        num_categories = len(categories)
-        return render_template(
-            template_name_or_list="categories.html",
-            categories=categories,
-            num_categories=num_categories
-        )
+            error_message = f"Что-то пошло не так: {str(e)}"
+
+    categories = Category.query.all()
+    genders = Gender.query.all()
+    sizes = Size.query.all()
+    countrys = Country.query.all()
+    seasons = Season.query.all()
+    num_categories = len(categories)
+    return render_template(
+        template_name_or_list="categories.html",
+        genders=genders,
+        sizes=sizes,
+        countrys=countrys,
+        seasons=seasons,
+        categories=categories,
+        num_categories=num_categories,
+        error_message=error_message
+    )
+
+
+@app.route("/delete_country/<int:id>")
+@login_required
+def delete_country(id):
+    country = Country.query.get_or_404(id)
+    try:
+        db.session.delete(country)
+        db.session.commit()
+        return redirect('/categories')
+    except Exception as e:
+        return f"Не удалось удалить пол: {str(e)}"
+
+
+@app.route("/delete_gender/<int:id>")
+@login_required
+def delete_gender(id):
+    gender = Gender.query.get_or_404(id)
+    try:
+        db.session.delete(gender)
+        db.session.commit()
+        return redirect('/categories')
+    except Exception as e:
+        return f"Не удалось удалить пол: {str(e)}"
+
+
+@app.route("/delete_size/<int:id>")
+@login_required
+def delete_size(id):
+    size = Size.query.get_or_404(id)
+    try:
+        db.session.delete(size)
+        db.session.commit()
+        return redirect('/categories')
+    except Exception as e:
+        return f"Не удалось удалить размер: {str(e)}"
+
+
+@app.route("/delete_season/<int:id>")
+@login_required
+def delete_season(id):
+    season = Season.query.get_or_404(id)
+    try:
+        db.session.delete(season)
+        db.session.commit()
+        return redirect('/categories')
+    except Exception as e:
+        return f"Не удалось удалить сезон: {str(e)}"
 
 
 @app.route("/delete-category/<int:id>")

@@ -1,57 +1,77 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ product.title }}
+    {{ product.title }}
 {% endblock %}
 
 {% block body %}
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-img-top">
-                    <div id="productImagesFor{{product.id}}" class="carousel slide carousel-fade" data-bs-ride="carousel">
-   <div class="carousel-inner">
-       {% for image in product.images %}
-      <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
-        <img src="/product/img/{{image.image}}" style="width: 100%;" class="d-block" alt="Slide 1">
-      </div>
-       {% endfor %}
-   </div>
-   <a class="carousel-control-prev" href="#productImagesFor{{product.id}}" role="button" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-   </a>
-   <a class="carousel-control-next" href="#productImagesFor{{product.id}}" role="button" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-   </a>
-</div>
-                </div>
-                <div class="card-body">
-                    <p>{{ product.description|safe }}</p>
-                    <h5 class="card-title pricing-card-title">{{ product.price }} руб.</h5>
-
-                    <div class="mt-4 d-flex gap-2">
-                        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
-                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ 'btn btn-outline-primary'}}" type="submit">
-                                Добавить в избранное
-                            </button>
-                        </form>
-
-                        <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
-                            <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-outline-danger' }}" type="submit">
-                                {% if product.id in favorite_product_ids %}
-                                    Удалить из избранного
-                                {% else %}
-                                    Добавить в избранное
-                                {% endif %}
-                            </button>
-                        </form>
+        <div class="col-md-6">
+            <div id="productImagesFor{{ product.id }}">
+                <div id="carouselExampleControls{{ product.id }}" class="carousel slide mt-3" data-bs-ride="carousel">
+                    <div class="carousel-inner" style="max-width: 500px; width: 100%;">
+                        {% for image in product.images %}
+                        <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
+                            <img src="{{ url_for('product_image', filename=image.image) }}" class="d-block w-100">
+                        </div>
+                        {% endfor %}
                     </div>
+                </div>
+                <div class="d-flex flex-wrap">
+                    {% for image in product.images %}
+                    <div class="thumbnail-wrapper" style="max-width: 100px; width: 100%; margin: 10px;">
+                        <img src="{{ url_for('product_image', filename=image.image) }}" class="img-thumbnail" style="cursor: pointer;" data-bs-target="#carouselExampleControls{{ product.id }}" data-bs-slide-to="{{ loop.index0 }}">
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <h2>{{ product.title }}</h2>
+            <h5 class="card-title pricing-card-title">{{ product.price }} руб.</h5>
+
+                        <div class="mt-4 d-flex gap-2">
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
+                    <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-outline-primary" type="submit">
+                        Добавить в корзину
+                    </button>
+                </form>
+
+                <form action="{% if product.id in favorite_product_ids %}{{ url_for('remove_from_favorites', product_id=product.id) }}{% else %}{{ url_for('add_to_favorites', product_id=product.id) }}{% endif %}" method="POST" class="d-inline ms-2">
+                    <button style="font-size: 14px; padding: 10px;" class="btn btn-lg {% if product.id in favorite_product_ids %}btn-outline-danger{% else %}btn-outline-secondary{% endif %}" type="submit">
+                        {% if product.id in favorite_product_ids %}
+                        Удалить из избранного
+                        {% else %}
+                        Добавить в избранное
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+
+            <br>
+
+            <div class="card-body"><p>{{ product.description|safe }}</p></div>
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var carousels = document.querySelectorAll('.carousel');
+        carousels.forEach(function(carousel) {
+            var bsCarousel = new bootstrap.Carousel(carousel, {
+                interval: false // Отключение автоматического переключения
+            });
+
+            // Обработчик клика на миниатюры
+            var thumbnails = carousel.parentElement.querySelectorAll('.thumbnail-wrapper img');
+            thumbnails.forEach(function(thumbnail, index) {
+                thumbnail.addEventListener('click', function() {
+                    bsCarousel.to(index); // Переключение карусели на соответствующий слайд
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}

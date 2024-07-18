@@ -6,23 +6,81 @@
 
 {% block body %}
 
-<h1>Добавить новую категорию</h1>
+{% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+{% endif %}
+
+<h1>Добавить новую запись</h1>
+<br>
 <form method="POST">
-    <input type="text" class="form-control" name="name" placeholder="Названии категории" required><br>
-    <input type="submit" class="btn btn-success" value="Добавить новую категорию"><br><br><hr>
+    <div class="mb-3 form-floating">
+        <select name="entity_type" class="form-select" required>
+            <option value="">Все категории</option>
+            <option value="category">Категория товаров</option>
+            <option value="gender">Пол</option>
+            <option value="season">Сезон</option>
+            <option value="size">Размеры</option>
+            <option value="country">Страна</option>
+        </select>
+        <label for="entity_type" class="form-label">Тип записи</label>
+    </div>
+    <div class="mb-4 form-floating">
+        <input type="text" name="name" class="form-control" placeholder="Название" required>
+        <label for="name" class="form-label">Название</label>
+    </div>
+    <input type="submit" class="btn btn-success" value="Добавить новую запись">
 </form>
 
-<h1>Список актуальных категорий</h1>
-    {% if num_categories <= 0 %}
-        <p style="color: red;">В данный момент нет категории</p>
-    {% elif num_categories >= 0 %}
+<hr>
 
-        {% for category in categories %}
-        <h4>
-            - {{category.name}}
-            <a href="{{ url_for('delete_category', id=category.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
-        </h4>
-        {% endfor %}
-    {% endif %}
+<h5>Список актуальных категорий:</h5>
+    {% for category in categories %}
+    <h4>
+        - {{ category.name }}
+        <a href="{{ url_for('delete_category', id=category.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+    </h4>
+    {% endfor %}
+
+<hr>
+
+<h5>Список актуальных полов:</h5>
+    {% for gender in genders %}
+    <h4>
+        - {{ gender.name }}
+        <a href="{{ url_for('delete_gender', id=gender.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+    </h4>
+    {% endfor %}
+
+<hr>
+
+<h5>Список актуальных стран:</h5>
+    {% for country in countrys %}
+    <h4>
+        - {{ country.name }}
+        <a href="{{ url_for('delete_country', id=country.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+    </h4>
+    {% endfor %}
+
+<hr>
+
+<h5>Список актуальных размеров:</h5>
+    {% for size in sizes %}
+    <h4>
+        - {{ size.name }}
+        <a href="{{ url_for('delete_size', id=size.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+    </h4>
+    {% endfor %}
+
+<hr>
+
+<h5>Список актуальных сезонов</h5>
+    {% for season in seasons %}
+    <h4>
+        - {{ season.name }}
+        <a href="{{ url_for('delete_season', id=season.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+    </h4>
+    {% endfor %}
 
 {% endblock %}

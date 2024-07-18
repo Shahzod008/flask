@@ -10,7 +10,7 @@
     {{ form.csrf_token }}
     <div class="mb-2 form-floating">
         {{ form.title(class="form-control" + ( ' is-invalid' if form.title.errors else '' ), placeholder="Название товара") }}
-        {{ form.title.label }}
+        {{ form.title.label(class="form-label") }}
         {% if form.title.errors %}
             {% for error in form.title.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -20,7 +20,7 @@
 
     <div class="mb-2 form-floating">
         {{ form.price(class="form-control" + ( ' is-invalid' if form.price.errors else '' ), placeholder="Цена товара") }}
-        {{ form.price.label }}
+        {{ form.price.label(class="form-label") }}
         {% if form.price.errors %}
             {% for error in form.price.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -29,8 +29,8 @@
     </div>
 
     <div class="mb-2 form-floating">
-        {{ form.ideal(class="form-control" + ( ' is-invalid' if form.ideal.errors else '' ), placeholder="Для чего больше всего подходит данный товар?") }}
-        {{ form.ideal.label }}
+        {{ form.ideal(class="form-control" + ( ' is-invalid' if form.ideal.errors else '' ), placeholder="Для чего подходит") }}
+        {{ form.ideal.label(class="form-label") }}
         {% if form.ideal.errors %}
             {% for error in form.ideal.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -38,59 +38,10 @@
         {% endif %}
     </div>
 
-    <div class="mb-2 form-floating">
-        {{ form.material(class="form-control" + ( ' is-invalid' if form.material.errors else '' ), placeholder="Материал") }}
-        {{ form.material.label }}
-        {% if form.material.errors %}
-            {% for error in form.material.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
 
     <div class="mb-2 form-floating">
-        {{ form.size(class="form-control" + ( ' is-invalid' if form.size.errors else '' ), placeholder="Размер") }}
-        {{ form.size.label }}
-        {% if form.size.errors %}
-            {% for error in form.size.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div class="mb-2 form-floating">
-        {{ form.washing_temperature(class="form-control" + ( ' is-invalid' if form.washing_temperature.errors else '' ), placeholder="Температура стирки") }}
-        {{ form.washing_temperature.label }}
-        {% if form.washing_temperature.errors %}
-            {% for error in form.washing_temperature.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div class="mb-2 form-floating">
-        {{ form.ironing_temperature(class="form-control" + ( ' is-invalid' if form.ironing_temperature.errors else '' ), placeholder="Температура глажки") }}
-        {{ form.ironing_temperature.label }}
-        {% if form.ironing_temperature.errors %}
-            {% for error in form.ironing_temperature.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div class="mb-2 form-floating">
-        {{ form.equipment(class="form-control" + ( ' is-invalid' if form.equipment.errors else '' ), placeholder="Комплектация") }}
-        {{ form.equipment.label }}
-        {% if form.equipment.errors %}
-            {% for error in form.equipment.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div class="mb-2 form-floating">
-        {{ form.warranty_date(class="form-control" + ( ' is-invalid' if form.warranty_date.errors else '' ), placeholder="Срок гарантии в месяцах") }}
-        {{ form.warranty_date.label }}
+        {{ form.warranty_date(class="form-control" + ( ' is-invalid' if form.warranty_date.errors else '' ), placeholder="Срок гарантии (месяцы)") }}
+        {{ form.warranty_date.label(class="form-label") }}
         {% if form.warranty_date.errors %}
             {% for error in form.warranty_date.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
@@ -99,20 +50,100 @@
     </div>
 
     <div class="mb-2 form-floating">
-        {{ form.intro(class="form-control" + ( ' is-invalid' if form.intro.errors else '' ), placeholder="Микро описание") }}
-        {{ form.intro.label }}
-        {% if form.intro.errors %}
-            {% for error in form.intro.errors %}
+        {{ form.description(class="form-control" + ( ' is-invalid' if form.description.errors else '' ), placeholder="Описание") }}
+        {{ form.description.label(class="form-label") }}
+        {% if form.description.errors %}
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2">
+        {{ form.color.label(class="form-label") }}
+        {{ form.color(class="form-control form-control-color" + ( ' is-invalid' if form.color.errors else '' ), type="color") }}
+        {% if form.color.errors %}
+            {% for error in form.color.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
         {% endif %}
     </div>
 
     <div class="mb-2 form-floating">
-        {{ form.description(class="form-control" + ( ' is-invalid' if form.description.errors else '' ), placeholder="Описание") }}
-        {{ form.description.label }}
-        {% if form.description.errors %}
-            {% for error in form.description.errors %}
+        {{ form.price_discount(class="form-control" + ( ' is-invalid' if form.price_discount.errors else '' ), placeholder="Цена со скидкой") }}
+        {{ form.price_discount.label(class="form-label") }}
+        {% if form.price_discount.errors %}
+            {% for error in form.price_discount.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2 form-floating">
+        {{ form.package_size(class="form-control" + ( ' is-invalid' if form.package_size.errors else '' ), placeholder="Размер и вес упаковки") }}
+        {{ form.package_size.label(class="form-label") }}
+        {% if form.package_size.errors %}
+            {% for error in form.package_size.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2 form-floating">
+        {{ form.brand(class="form-control" + ( ' is-invalid' if form.brand.errors else '' ), placeholder="Бренд") }}
+        {{ form.brand.label(class="form-label") }}
+        {% if form.brand.errors %}
+            {% for error in form.brand.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="mb-2 form-floating">
+        {{ form.keywords(class="form-control" + ( ' is-invalid' if form.keywords.errors else '' ), placeholder="ключевые слова для поиска") }}
+        {{ form.keywords.label(class="form-label") }}
+        {% if form.keywords.errors %}
+            {% for error in form.keywords.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="input-group mb-3">
+        <h3 class="me-4">Выберите страну производителя:</h3>
+        {{ form.country_id(class="form-select me-2", required=True) }}
+        {% if form.country_id.errors %}
+            {% for error in form.country_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="input-group mb-3">
+        <h3 class="me-4">Выберите пол:</h3>
+        {{ form.gender_id(class="form-select me-2", required=True) }}
+        {% if form.gender_id.errors %}
+            {% for error in form.gender_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="input-group mb-3">
+        <h3 class="me-4">Выберите размер:</h3>
+        {{ form.size_id(class="form-select me-2", required=True) }}
+        {% if form.size_id.errors %}
+            {% for error in form.size_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="input-group mb-3">
+        <h3 class="me-4">Выберите сезон:</h3>
+        {{ form.season_id(class="form-select me-2", required=True) }}
+        {% if form.season_id.errors %}
+            {% for error in form.season_id.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
         {% endif %}
@@ -141,58 +172,6 @@
     <button class="btn btn-success">Добавить</button>
 </form>
 
-<script>
-    function updateDescription() {
-        var title = document.getElementById('title').value;
-        var ideal = document.getElementById('ideal').value;
-        var material = document.getElementById('material').value;
-        var size = document.getElementById('size').value;
-        var washing_temperature = document.getElementById('washing_temperature').value;
-        var ironing_temperature = document.getElementById('ironing_temperature').value;
-        var equipment = document.getElementById('equipment').value;
-        var warranty_date = document.getElementById('warranty_date').value;
 
-        var descriptionTemplate = `Название товара: ${title}
-
-Описание:
-${title} - это стильный и качественный элемент гардероба, идеально подходящий для ${ideal}. Изготовлена из высококачественных материалов, обеспечивающих комфорт и долговечность.<br><br>
-
-<b>Характеристики:</b><br><br>
-
-<b>Материал</b>: ${material}<br>
-<b>Размеры</b>: ${size}<br>
-<b>Цвет</b>: [Цвет]<br>
-<b>Дизайн</b>: [Дизайн]<br><br>
-Преимущества:<br><br>
-
-Качество: ${title} изготовлена из ${material}, обеспечивающего долгий срок службы и устойчивость к износу.<br>
-Комфорт: Благодаря ${material} и [дизайн], одежда обеспечивает комфортное ношение в течение всего дня.<br>
-Универсальность: Идеально подходит для ${ideal}.<br>
-Стиль: [Описание стиля, соответствующего модным тенденциям и личным предпочтениям].<br><br>
-Уход за изделием:<br><br>
-
-Машинная стирка при ${washing_temperature}.<br>
-Гладить при ${ironing_temperature}.<br>
-Не отбеливать.<br>
-Сушить в тени.<br><br>
-
-Комплектация:<br>
-${equipment}<br><br>
-
-Гарантия и обслуживание:<br>
-Мы предоставляем гарантию на ${title} сроком на ${warranty_date}. Также у нас есть сервисное обслуживание и поддержка клиентов.`;
-
-        document.getElementById('description').value = descriptionTemplate;
-    }
-
-    document.getElementById('title').addEventListener('input', updateDescription);
-    document.getElementById('ideal').addEventListener('input', updateDescription);
-    document.getElementById('material').addEventListener('input', updateDescription);
-    document.getElementById('size').addEventListener('input', updateDescription);
-    document.getElementById('washing_temperature').addEventListener('input', updateDescription);
-    document.getElementById('ironing_temperature').addEventListener('input', updateDescription);
-    document.getElementById('equipment').addEventListener('input', updateDescription);
-    document.getElementById('warranty_date').addEventListener('input', updateDescription);
-</script>
 
 {% endblock %}
