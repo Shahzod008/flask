@@ -39,7 +39,7 @@
     {% for category in categories %}
     <h4>
         - {{ category.name }}
-        <a href="{{ url_for('delete_category', id=category.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+        <a href="{{ url_for('delete_category', id=category.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px; align-content: center;">Удалить</a>
     </h4>
     {% endfor %}
 

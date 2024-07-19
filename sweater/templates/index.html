@@ -7,45 +7,62 @@
 {% block body %}
 
 {% if num_product <= 0 %}
-    <h2>Мой стиль - Магазин одежды</h2>
-    <p>товары закончились зайдите по позже</p>
+<h2>Мой стиль - Магазин одежды</h2>
+<p>Товары закончились, зайдите позже.</p>
 {% else %}
-<div>
-    {% for category in categories %}
-        <a href="{{ url_for('home', category_id=category.id) }}" class="{% if selected_category and selected_category|int == category.id %}selected{% endif %}">
+
+<div style="display: flex; margin-bottom: 20px; justify-content: space-between; align-items: center; ">
+    <div style="overflow-x: auto; display: flex; margin-right: 15px;">
+        {% for category in categories %}
+        <a style="text-align: center; margin: 5px; align-content: center;" href="{{ url_for('home', category_id=category.id) }}" class="btn btn-outline-primary {% if selected_category and selected_category|int == category.id %}selected{% endif %}">
             {{ category.name }}
         </a>
-    {% endfor %}
+        {% endfor %}
+    </div>
+    <a href="/product" class="btn btn-outline-primary" style="">Фильтрация</a>
 </div>
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 " >
     {% for product in products %}
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm h-100" style="height: 100%;">
-                <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
-                    <div class="image-container">
-                        <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h4 class="my-0 fw-bold">{{ product.title }}</h4>
-                        <h3 class="card-title pricing-card-title text-end">{{ product.price }}<small class="text-muted">₽</small></h3>
-                    </div>
-                </a>
-                <div class="card-footer d-flex" style="margin-top: auto;">
-                    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
-                        <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ 'btn btn-outline-primary'}}" type="submit">Добавить в корзину</button>
-                    </form>
-                    <form action="{{ url_for('add_to_favorites' if product.id not in favorite_product_ids else 'remove_from_favorites', product_id=product.id) }}" method="POST" class="d-inline ms-2">
-                        <button style="font-size: 14px; padding: 10px;" class="btn btn-lg{{ ' btn-outline-secondary' if product.id not in favorite_product_ids else ' btn-outline-danger' }}" type="submit">
-                            {% if product.id in favorite_product_ids %}
-                                Удалить из избранного
-                            {% else %}
-                                Добавить в избранное
-                            {% endif %}
-                        </button>
-                    </form>
+    <div>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
+                <div class="image-container">
+                    <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
                 </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #333;" >{{ product.title }}</h6>
+                    <div class="d-flex" style="align-items: center; place-content: end;">
+                        {% if product.price_discount %}
+                        <h3 style="font-size: 1.4rem; font-weight: 700; color: #9A2113;">{{ product.price_discount }}₽</h3>
+                        <h5 style="font-size: 1rem; color: #555; text-decoration: line-through; margin-left: 10px;">{{ product.price }}₽</h5>
+                        <span style="font-size: 1rem; color: #28a745; margin-left: 10px;">
+                        -{{100- ((product.price_discount / product.price) * 100) | round(2) }}%
+                    </span>
+                        {% else %}
+                        <h3 style="font-size: 1.4rem; font-weight: 700; color: #9A2113;">{{ product.price }}₽</h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            <div class="card-footer d-flex" style="">
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
+                    <button style="font-size: 12px; padding: 5px;" class="btn btn-outline-primary" type="submit">Добавить в корзину</button>
+                </form>
+                <form action="{{ url_for(product.id not in favorite_product_ids and 'add_to_favorites' or 'remove_from_favorites', product_id=product.id) }}" method="POST" class=" ms-1">
+                    <button style="font-size: 12px; padding: 5px;" class="btn {{ product.id not in favorite_product_ids and 'btn-outline-secondary' or 'btn-outline-danger' }}" type="submit">
+                        {% if product.id in favorite_product_ids %}
+                        Удалить из избранного
+                        {% else %}
+                        Добавить в избранное
+                        {% endif %}
+                    </button>
+                </form>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('delete_product', id=product.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+                {% endif %}
             </div>
         </div>
+    </div>
     {% endfor %}
 </div>
 

@@ -1,6 +1,6 @@
 from wtforms.fields.simple import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, ColorField
 from sweater.models import Category, Season, Gender, Size, Country
-from wtforms.validators import DataRequired, EqualTo
+from wtforms.validators import DataRequired, EqualTo, Optional
 from wtforms.fields.numeric import IntegerField
 from wtforms.fields.choices import SelectField
 from wtforms.fields import MultipleFileField
@@ -8,23 +8,23 @@ from flask_wtf import FlaskForm
 
 
 class ProductForm(FlaskForm):
-    title = StringField('Название товара', validators=[DataRequired()])
-    price = IntegerField('Цена товара', validators=[DataRequired()])
-    ideal = StringField('Для чего подходит', validators=[DataRequired()])
-    warranty_date = StringField('Срок гарантии (месяцы)', validators=[DataRequired()])
-    description = TextAreaField('Описание', validators=[DataRequired()])
-    color = ColorField('Цвет', validators=[DataRequired()])
-    price_discount = IntegerField('Цена со скидкой', validators=[DataRequired()])
-    package_size = StringField('Размер и вес упаковки в граммах и в миллиметрах: длина, ширина, высота, вес',
+    title = StringField('Название товара *', validators=[DataRequired()])
+    price = IntegerField('Цена товара *', validators=[DataRequired()])
+    ideal = StringField('Для чего подходит *', validators=[DataRequired()])
+    warranty_date = StringField('Срок гарантии (месяцы) *', validators=[DataRequired()])
+    description = TextAreaField('Описание *', validators=[DataRequired()])
+    color = ColorField('Цвет *', validators=[DataRequired()])
+    price_discount = IntegerField('Цена со скидкой *', validators=[DataRequired()])
+    package_size = StringField('Размер и вес упаковки в граммах и в миллиметрах: длина, ширина, высота, вес *',
                                validators=[DataRequired()])
-    brand = StringField('Бренд', validators=[DataRequired()])
-    keywords = TextAreaField('ключевые слова для поиска', validators=[DataRequired()])
-    category_id = SelectField('Категория', choices=[], validators=[DataRequired()])
-    season_id = SelectField('В какой сезон лучше подойдет товар', choices=[], validators=[DataRequired()])
-    country_id = SelectField('Страна', choices=[], validators=[DataRequired()])
-    gender_id = SelectField('Пол', choices=[], validators=[DataRequired()])
-    size_id = SelectField('Размер', choices=[], validators=[DataRequired()])
-    images = MultipleFileField('Изображения товара', validators=[DataRequired()], render_kw={'multiple': True})
+    brand = StringField('Бренд *', validators=[DataRequired()])
+    keywords = TextAreaField('ключевые слова для поиска *', validators=[DataRequired()])
+    category_id = SelectField('Категория *', choices=[], validators=[DataRequired()])
+    season_id = SelectField('В какой сезон лучше подойдет товар *', choices=[], validators=[DataRequired()])
+    country_id = SelectField('Страна *', choices=[], validators=[DataRequired()])
+    gender_id = SelectField('Пол *', choices=[], validators=[DataRequired()])
+    size_id = SelectField('Размер *', choices=[], validators=[DataRequired()])
+    images = MultipleFileField('Изображения товара *', validators=[DataRequired()], render_kw={'multiple': True})
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

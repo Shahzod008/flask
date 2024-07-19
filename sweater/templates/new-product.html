@@ -100,7 +100,7 @@
     </div>
 
     <div class="mb-2 form-floating">
-        {{ form.keywords(class="form-control" + ( ' is-invalid' if form.keywords.errors else '' ), placeholder="ключевые слова для поиска") }}
+        {{ form.keywords(class="form-control" + ( ' is-invalid' if form.keywords.errors else '' ), placeholder="Ключевые слова для поиска") }}
         {{ form.keywords.label(class="form-label") }}
         {% if form.keywords.errors %}
             {% for error in form.keywords.errors %}
