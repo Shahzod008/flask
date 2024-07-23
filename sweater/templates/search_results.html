@@ -9,31 +9,27 @@
     <h1 class="my-4">Результаты поиска</h1>
 
     {% if num_product > 0 %}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4">
         {% for item in products %}
         <div class="col">
-            <div class="card h-100 mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h4 class="my-0 fw-normal">{{ item.highlighted_title | safe }}</h4>
-                    <form action="{{
-                        url_for('add_to_favorites' if item.product.id not in favorite_product_ids else 'remove_from_favorites',
-                        product_id=item.product.id) }}" method="POST" class="d-inline ms-2">
-                        <button class="btn btn-outline-secondary btn-sm" type="submit">
-                            {% if item.product.id in favorite_product_ids %}
-                            Удалить из избранного
+            <div class="card h-100">
+                <a href="{{ url_for('detail_product', id=item.product.id) }}" class="text-decoration-none text-dark">
+                    <div class="image-container">
+                        <img src="/product/img/{{ item.product.images[0].image }}" class="card-img-top" alt="{{ item.product.title }}">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #333;">{{ item.highlighted_title|safe }}</h6>
+                        <div class="d-flex align-items-center justify-content-end">
+                            {% if item.product.price_discount %}
+                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #9A2113;">{{ item.product.price_discount }}₽</h3>
+                            <h5 style="font-size: 1rem; color: #555; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ item.product.price }}₽</h5>
+                            <span style="color: #ffffff; margin-left: 5px; align-self: flex-start; font-size: small; background-color: #ff0030; border-radius: 15%; padding: 2px;">-{{ 100 - ((item.product.price_discount / item.product.price) * 100) | round(2) }}%</span>
                             {% else %}
-                            Добавить в избранное
+                            <h3 style="font-size: 1.4rem; font-weight: 700; color: #9A2113;">{{ item.product.price }}₽</h3>
                             {% endif %}
-                        </button>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">{{ item.highlighted_description | safe }}</p>
-                    <h3 class="card-title pricing-card-title text-end">{{ item.product.price }} <small
-                            class="text-muted">₽</small></h3>
-                    <a href="/detail-product/{{ item.product.id }}"
-                        class="w-100 btn btn-lg btn-outline-primary">Подробнее</a>
-                </div>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
         {% endfor %}

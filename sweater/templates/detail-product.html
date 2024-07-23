@@ -31,13 +31,12 @@
             <h2>{{ product.title }}</h2>
             <h5 class="card-title pricing-card-title">{{ product.price }} руб.</h5>
 
-                        <div class="mt-4 d-flex gap-2">
+            <div class="mt-4 d-flex gap-2">
                 <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
                     <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-outline-primary" type="submit">
                         Добавить в корзину
                     </button>
                 </form>
-
                 <form action="{% if product.id in favorite_product_ids %}{{ url_for('remove_from_favorites', product_id=product.id) }}{% else %}{{ url_for('add_to_favorites', product_id=product.id) }}{% endif %}" method="POST" class="d-inline ms-2">
                     <button style="font-size: 14px; padding: 10px;" class="btn btn-lg {% if product.id in favorite_product_ids %}btn-outline-danger{% else %}btn-outline-secondary{% endif %}" type="submit">
                         {% if product.id in favorite_product_ids %}
@@ -47,11 +46,26 @@
                         {% endif %}
                     </button>
                 </form>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('delete_product', id=product.id) }}" class="btn btn-outline-danger" style="margin-left: 10px; align-content: center;">Удалить</a>
+                {% endif %}
             </div>
 
             <br>
 
             <div class="card-body"><p>{{ product.description|safe }}</p></div>
+            <div class="card-body"><p> Цена {{ product.price|safe }}</p></div>
+            <div class="card-body"><p> Идеал {{ product.ideal|safe }}</p></div>
+            <div class="card-body"><p> Категорий {{ product.category_id|safe }}</p></div>
+            <div class="card-body"><p> Сезон {{ product.season_id|safe }}</p></div>
+            <div class="card-body"><p> Размер{{ product.size_id|safe }}</p></div>
+            <div class="card-body"><p> Пол{{ product.gender_id|safe }}</p></div>
+            <div class="card-body"><p> Страна{{ product.country_id|safe }}</p></div>
+            <div class="card-body"><p> Цвет {{ product.color|safe }}</p></div>
+            <div class="card-body"><p> скидочная цена{{ product.price_discount|safe }}</p></div>
+            <div class="card-body"><p> габарит {{ product.package_size|safe }}</p></div>
+            <div class="card-body"><p> бренд {{ product.brand|safe }}</p></div>
+            <div class="card-body"><p> ключевые слова {{ product.keywords|safe }}</p></div>
         </div>
     </div>
 </div>

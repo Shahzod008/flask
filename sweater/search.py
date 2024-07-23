@@ -3,8 +3,8 @@ import re
 from flask_login import current_user
 
 from sweater import app
-from sweater.models import Product, Category, Gender, Country, Size, Season, User, Favorite, CartItem, ProductImage
-from flask import render_template, request, redirect, flash, url_for, send_from_directory, jsonify
+from sweater.models import Product
+from flask import render_template, request, jsonify
 
 
 @app.route("/search", methods=['GET'])
@@ -13,8 +13,7 @@ def search():
 
     if query:
         products = Product.query.filter(
-            (Product.title.ilike(f"%{query}%")) |
-            (Product.description.ilike(f"%{query}%")) |
+            (Product.keywords.ilike(f"%{query}%")) |
             (Product.id == query)
         ).all()
     else:
@@ -25,14 +24,11 @@ def search():
 
     highlighted_products = []
     for product in products:
-        highlighted_title = re.sub(f"({re.escape(query)})", r"<strong>\1</strong>",
-                                   product.title, flags=re.IGNORECASE)
-        highlighted_description = re.sub(f"({re.escape(query)})", r"<strong>\1</strong>",
-                                         product.description, flags=re.IGNORECASE)
+        highlighted_keywords = re.sub(f"({re.escape(query)})", r"<strong>\1</strong>", product.keywords, flags=re.IGNORECASE)
+
         highlighted_products.append({
             'product': product,
-            'highlighted_title': highlighted_title,
-            'highlighted_description': highlighted_description
+            'highlighted_keywords': highlighted_keywords,
         })
 
     return render_template(

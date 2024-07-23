@@ -83,12 +83,6 @@ def products():
     selected_country = request.args.get('country_id', type=int)
     selected_size = request.args.get('size_id', type=int)
 
-    categories = Category.query.all()
-    genders = Gender.query.all()
-    sizes = Size.query.all()
-    countrys = Country.query.all()
-    seasons = Season.query.all()
-
     filters = {}
     if selected_category:
         filters['category_id'] = selected_category
@@ -103,15 +97,29 @@ def products():
 
     products = Product.query.filter_by(**filters).all()
 
-    num_product = len(products)
+    # Получаем только связанные объекты для текущих фильтров
+    category_ids = {p.category_id for p in products}
+    gender_ids = {p.gender_id for p in products}
+    size_ids = {p.size_id for p in products}
+    country_ids = {p.country_id for p in products}
+    season_ids = {p.season_id for p in products}
+
+    categories = Category.query.filter(Category.id.in_(category_ids)).all()
+    genders = Gender.query.filter(Gender.id.in_(gender_ids)).all()
+    sizes = Size.query.filter(Size.id.in_(size_ids)).all()
+    countries = Country.query.filter(Country.id.in_(country_ids)).all()
+    seasons = Season.query.filter(Season.id.in_(season_ids)).all()
+
+    num_products = len(products)
     favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
+
     return render_template(
-        template_name_or_list="products.html",
+        "products.html",
         favorite_product_ids=favorite_product_ids,
         products=products,
         sizes=sizes,
         categories=categories,
-        countrys=countrys,
+        countries=countries,
         seasons=seasons,
         genders=genders,
         selected_category=selected_category,
@@ -119,32 +127,9 @@ def products():
         selected_country=selected_country,
         selected_season=selected_season,
         selected_gender=selected_gender,
-        num_product=num_product
+        num_product=num_products
     )
 
-
-@app.route('/product', methods=['GET'])
-def product():
-    selected_category = request.args.get('category_id', type=int)
-    selected_gender = request.args.get('gender_id', type=int)
-
-    categories = Category.query.all()
-    genders = Gender.query.all()
-
-    filters = {}
-    if selected_category:
-        filters['category_id'] = selected_category
-    if selected_gender:
-        filters['gender_id'] = selected_gender
-
-    products = Product.query.filter_by(**filters).all()
-
-    return render_template('product.html',
-                           categories=categories,
-                           genders=genders,
-                           products=products,
-                           selected_category=selected_category,
-                           selected_gender=selected_gender)
 
 
 @app.route('/delete-product/<int:id>')

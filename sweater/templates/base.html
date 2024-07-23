@@ -45,15 +45,17 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse justify-content-evenly" id="navbarContent">
                         <ul class="navbar-nav" style="max-width: 100%; width: 100%; justify-content: space-evenly;" >
+                            <li class="nav-item"><a href="/product" class="nav-link">Каталог</a></li>
                             {% if current_user.is_authenticated %}
                             <li class="nav-item"><a href="/cart" class="nav-link">Корзина</a></li>
-                            <li class="nav-item"><a href="/favorites" class="nav-link">Избранные товары</a></li>
-                            <li class="nav-item"><a href="/logout" class="nav-link">Выйти</a></li>
+                            <li class="nav-item"><a href="/favorites" class="nav-link">Избранное</a></li>
                             {% else %}
                             <li class="nav-item"><a href="/login" class="nav-link">Войти</a></li>
                             {% endif %}
-                            <li class="nav-item"><a href="/product" class="nav-link">Продукт</a></li>
                             <li class="nav-item"><a href="/about" class="nav-link">О нас</a></li>
+                            {% if current_user.is_authenticated %}
+                            <li class="nav-item"><a href="/logout" class="nav-link">Выйти</a></li>
+                            {% endif %}
                             {% if current_user.is_admin %}
                             <li class="nav-item"><a href="/categories" class="nav-link">Кат</a></li>
                             <li class="nav-item"><a href="/new-product" class="nav-link">+ товар</a></li>
@@ -61,8 +63,7 @@
                         </ul>
                         <br>
                         <form action="{{ url_for('search') }}" method="GET" class="search-form d-flex position-relative">
-                            <input class="form-control me-2 search-input" type="search" placeholder="Поиск товаров"
-                                aria-label="Поиск" name="query" id="search-input" autocomplete="off">
+                            <input class="form-control me-2 search-input" type="search" placeholder="Поиск товаров" aria-label="Поиск" name="query" id="search-input" autocomplete="off">
                             <button class="btn btn-outline-success search-button" type="submit">Найти</button>
                             <div id="suggestions" class="list-group position-absolute" style="display:none; border-radius: 5%; z-index: 1000;"></div>
                         </form>
@@ -90,7 +91,7 @@
                     <a href="/" class="nav-link px-2 text-body-secondary">Главная страница</a>
                 </li>
                 <li style="width: 70px" class="nav-item">
-                    <a href="/product" class="nav-link px-2 text-body-secondary">Товары</a>
+                    <a href="/product" class="nav-link px-2 text-body-secondary">Каталог</a>
                 </li>
                 <li style="width: 155px" class="nav-item">
                     <a href="/about" class="nav-link px-2 text-body-secondary">О нашем магазине</a>
