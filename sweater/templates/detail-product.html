@@ -1,11 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    {{ product.title }}
-{% endblock %}
+{% block title %}{{ product.title }}{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
     <div class="row">
         <div class="col-md-6">
             <div id="productImagesFor{{ product.id }}">
@@ -53,22 +50,53 @@
 
             <br>
 
-            <div class="card-body"><p>{{ product.description|safe }}</p></div>
-            <div class="card-body"><p> Цена {{ product.price|safe }}</p></div>
-            <div class="card-body"><p> Идеал {{ product.ideal|safe }}</p></div>
-            <div class="card-body"><p> Категорий {{ product.category_id|safe }}</p></div>
-            <div class="card-body"><p> Сезон {{ product.season_id|safe }}</p></div>
-            <div class="card-body"><p> Размер{{ product.size_id|safe }}</p></div>
-            <div class="card-body"><p> Пол{{ product.gender_id|safe }}</p></div>
-            <div class="card-body"><p> Страна{{ product.country_id|safe }}</p></div>
-            <div class="card-body"><p> Цвет {{ product.color|safe }}</p></div>
-            <div class="card-body"><p> скидочная цена{{ product.price_discount|safe }}</p></div>
-            <div class="card-body"><p> габарит {{ product.package_size|safe }}</p></div>
-            <div class="card-body"><p> бренд {{ product.brand|safe }}</p></div>
-            <div class="card-body"><p> ключевые слова {{ product.keywords|safe }}</p></div>
+            <div class="card-body">
+                <p>{{ product.description|safe }}</p>
+                <p> Цена {{ product.price|safe }}</p>
+                <p> Идеал {{ product.ideal|safe }}</p>
+                <p> Категория {{ product.category.name }}</p>
+                <p> Сезон {{ product.season.name }}</p>
+                <p> Размер {{ product.size.name }}</p>
+                <p> Пол {{ product.gender.name }}</p>
+                <p> Страна {{ product.country.name }}</p>
+                <span style="background-color: {{ product.color }}; display: inline-block; width: 50px; height: 50px;"></span>
+                <p> Скидочная цена {{ product.price_discount|safe }}</p>
+                <p> Габариты {{ product.package_size|safe }}</p>
+                <p> Бренд {{ product.brand|safe }}</p>
+                <p> Ключевые слова {{ product.keywords|safe }}</p>
+            </div>
         </div>
     </div>
-</div>
+
+
+{% if num_similar_products <= 0 %}
+{% else %}
+<hr>
+<h3>Похожие товары</h3>
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-4 " >
+        {% for similar_product in similar_products %}
+        <div class="col-md-3">
+            <div class="card mb-4 shadow-sm">
+                <a href="{{ url_for('detail_product', id=similar_product.id) }}" class="text-decoration-none text-dark">
+                <div class="image-container">
+                    <img src="/product/img/{{ similar_product.images[0].image }}" class="card-img-top" alt="{{ similar_product.title }}">
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5>{{ similar_product.title }}</h5>
+                    <div class="d-flex" style="align-items: center; place-content: end;">
+                        {% if similar_product.price_discount %}
+                        <h3>{{ similar_product.price_discount }}₽</h3>
+                        {% else %}
+                        <h3>{{ similar_product.price }}₽</h3>
+                        {% endif %}
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

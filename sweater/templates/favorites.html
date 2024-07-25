@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Избранное
+{% endblock %}
+
 {% block body %}
 
 {% if favorites %}
 
-<div class="container mt-4">
     <h1>Избранное</h1>
     <ul class="list-group">
         {% for favorite in favorites %}
@@ -16,12 +19,11 @@
                 </div>
             </a>
             <form action="{{ url_for('remove_from_favorites', product_id=favorite.product.id) }}" method="POST">
-                <button type="submit" class="btn btn-outline-danger">Удалить из избранного</button>
+                <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
             </form>
         </li>
         {% endfor %}
     </ul>
-</div>
 
 {% else %}
     <h2>B избранном пусто</h2>

@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block body %}
-<div class="d-flex" >
-
-<form method="GET" action="/product" class="needs-validation" style="margin-right: 10px; max-width: 200px; width: 100%;" id="filterForm">
+<div class="d-flex">
+    <form method="GET" action="/product" class="needs-validation" style="margin-right: 10px; max-width: 200px; width: 100%;" id="filterForm">
     <h6>Категория</h6>
     <div class="input-group mb-3" style="min-width: 170px; width: 100%;">
         <select name="category_id" class="form-select" id="category" onchange="document.getElementById('filterForm').submit()">
@@ -68,37 +67,35 @@
         </select>
     </div>
 </form>
-
-{% if num_product <= 0 %}
-    <h1>Сегодня нет товаров</h1>
-{% else %}
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4 " >
-    {% for product in products %}
-    <div class="col" >
-        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
-                <div class="image-container">
-                    <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
+    {% if num_product <= 0 %}
+        <h1>Сегодня нет товаров</h1>
+    {% else %}
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4 " >
+        {% for product in products %}
+            <div class="col" >
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
+                        <div class="image-container">
+                            <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #333;" >{{ product.title }}</h6>
+                            <div class="d-flex" style="align-items: center; place-content: end;">
+                                {% if product.price_discount %}
+                                <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #9A2113;">{{ product.price_discount }}₽</h3>
+                                <h5 style="font-size: 1rem; color: #555; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
+                                <span style="color: #ffffff; margin-left: 5px; align-self: flex-start; font-size: small; background-color: #ff0030; border-radius: 15%; padding: 2px;">-{{100- ((product.price_discount / product.price) * 100) | round() }}%</span>
+                                {% else %}
+                                <h3 style="font-size: 1.4rem; font-weight: 700; color: #9A2113;">{{ product.price }}₽</h3>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                <div class="card-body d-flex flex-column">
-                    <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #333;" >{{ product.title }}</h6>
-                    <div class="d-flex" style="align-items: center; place-content: end;">
-                        {% if product.price_discount %}
-                        <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #9A2113;">{{ product.price_discount }}₽</h3>
-                        <h5 style="font-size: 1rem; color: #555; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
-                        <span style="color: #ffffff; margin-left: 5px; align-self: flex-start; font-size: small; background-color: #ff0030; border-radius: 15%; padding: 2px;">-{{100- ((product.price_discount / product.price) * 100) | round(2) }}%</span>
-                        {% else %}
-                        <h3 style="font-size: 1.4rem; font-weight: 700; color: #9A2113;">{{ product.price }}₽</h3>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-
+            </div>
+            {% endfor %}
         </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+    {% endif %}
 </div>
 
 {% endblock %}

@@ -34,7 +34,7 @@
                         {% if product.price_discount %}
                         <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #9A2113;">{{ product.price_discount }}₽</h3>
                         <h5 style="font-size: 1rem; color: #555; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
-                        <span style="color: #ffffff; margin-left: 5px; align-self: flex-start; font-size: small; background-color: #ff0030; border-radius: 15%; padding: 2px;">-{{100- ((product.price_discount / product.price) * 100) | round(2) }}%</span>
+                        <span style="color: #ffffff; margin-left: 5px; align-self: flex-start; font-size: small; background-color: #ff0030; border-radius: 15%; padding: 2px;">-{{100- ((product.price_discount / product.price) * 100) | round() }}%</span>
                         {% else %}
                         <h3 style="font-size: 1.4rem; font-weight: 700; color: #9A2113;">{{ product.price }}₽</h3>
                         {% endif %}

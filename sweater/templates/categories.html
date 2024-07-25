@@ -19,10 +19,10 @@
         <select name="entity_type" class="form-select" required>
             <option value="">Все категории</option>
             <option value="category">Категория товаров</option>
+            <option value="country">Страна</option>
             <option value="gender">Пол</option>
             <option value="season">Сезон</option>
             <option value="size">Размеры</option>
-            <option value="country">Страна</option>
         </select>
         <label for="entity_type" class="form-label">Тип записи</label>
     </div>
@@ -32,55 +32,39 @@
     </div>
     <input type="submit" class="btn btn-success" value="Добавить новую запись">
 </form>
-
 <hr>
 
+{% macro render_list(items, delete_url) %}
+{% for item in items %}
+<h4>
+    - {{ item.name }}
+    <a href="{{ url_for(delete_url, id=item.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
+</h4>
+{% endfor %}
+{% endmacro %}
+
 <h5>Список актуальных категорий:</h5>
-    {% for category in categories %}
-    <h4>
-        - {{ category.name }}
-        <a href="{{ url_for('delete_category', id=category.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px; align-content: center;">Удалить</a>
-    </h4>
-    {% endfor %}
+{{ render_list(categories, 'delete_category') }}
 
 <hr>
 
 <h5>Список актуальных полов:</h5>
-    {% for gender in genders %}
-    <h4>
-        - {{ gender.name }}
-        <a href="{{ url_for('delete_gender', id=gender.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
-    </h4>
-    {% endfor %}
+{{ render_list(genders, 'delete_gender') }}
 
 <hr>
 
 <h5>Список актуальных стран:</h5>
-    {% for country in countrys %}
-    <h4>
-        - {{ country.name }}
-        <a href="{{ url_for('delete_country', id=country.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
-    </h4>
-    {% endfor %}
+{{ render_list(countrys, 'delete_country') }}
 
 <hr>
 
 <h5>Список актуальных размеров:</h5>
-    {% for size in sizes %}
-    <h4>
-        - {{ size.name }}
-        <a href="{{ url_for('delete_size', id=size.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
-    </h4>
-    {% endfor %}
+{{ render_list(sizes, 'delete_size') }}
 
 <hr>
 
-<h5>Список актуальных сезонов</h5>
-    {% for season in seasons %}
-    <h4>
-        - {{ season.name }}
-        <a href="{{ url_for('delete_season', id=season.id) }}" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</a>
-    </h4>
-    {% endfor %}
+<h5>Список актуальных сезонов:</h5>
+{{ render_list(seasons, 'delete_season') }}
+
 
 {% endblock %}

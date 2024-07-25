@@ -5,9 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
     <h1 class="my-4">Результаты поиска</h1>
-
     {% if num_product > 0 %}
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4">
         {% for item in products %}
@@ -37,5 +35,4 @@
     {% else %}
     <p>Нет результатов для запроса "{{ query }}"</p>
     {% endif %}
-</div>
 {% endblock %}
