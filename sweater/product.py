@@ -91,6 +91,7 @@ def products():
     selected_season = request.args.get('season_id', type=int)
     selected_country = request.args.get('country_id', type=int)
     selected_size = request.args.get('size_id', type=int)
+    sort_by = request.args.get('sort_by', type=str)
 
     filters = {}
     if selected_category:
@@ -104,7 +105,20 @@ def products():
     if selected_season:
         filters['season_id'] = selected_season
 
-    products = Product.query.filter_by(**filters).all()
+    query = Product.query.filter_by(**filters)
+
+    if sort_by == "newness" or not sort_by:
+        query = query.order_by(Product.date.desc())
+    elif sort_by == "price_asc":
+        query = query.order_by(Product.price_discount.asc())
+    elif sort_by == "price_desc":
+        query = query.order_by(Product.price_discount.desc())
+    elif sort_by == "biggest_discount":
+        query = query.order_by(((Product.price - Product.price_discount) / Product.price).desc())
+    elif sort_by == "oldest":
+        query = query.order_by(Product.date.asc())
+
+    products = query.all()
 
     # Получаем только связанные объекты для текущих фильтров
     category_ids = {p.category_id for p in products}
@@ -119,7 +133,6 @@ def products():
     countries = Country.query.filter(Country.id.in_(country_ids)).all()
     seasons = Season.query.filter(Season.id.in_(season_ids)).all()
 
-    num_products = len(products)
     favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
 
     return render_template(
@@ -136,8 +149,9 @@ def products():
         selected_country=selected_country,
         selected_season=selected_season,
         selected_gender=selected_gender,
-        num_product=num_products
+        sort_by=sort_by
     )
+
 
 
 @app.route('/delete-product/<int:id>')
