@@ -74,12 +74,12 @@ def detail_product(id):
         favorite_product_ids=favorite_product_ids,
         cart_item=cart_item,
         product=product,
-        num_similar_products=len(similar_products),
+        similar_products=similar_products,
         similar_products=similar_products
     )
 
 
-@app.route("/product/img/<filename>")
+@app.route("/product/img-user-ava/<filename>")
 def product_image(filename):
     return send_from_directory(*get_path_for_image(filename, True))
 

@@ -8,107 +8,103 @@
 <div class="d-flex">
     {% if products %}
         <form method="GET" action="/product" class="needs-validation" style="margin-right: 10px; max-width: 200px; width: 100%;" id="filterForm">
-    <h6>Сортировка</h6>
-    <div class="input-group mb-3">
-        <select name="sort_by" class="form-select" id="sort_by" onchange="document.getElementById('filterForm').submit()">
-            <option value="newness" {% if sort_by == 'newness' %}selected{% endif %}>Новинки</option>
-            <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Дешевле</option>
-            <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Дороже</option>
-            <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Старые</option>
-            <option value="biggest_discount" {% if sort_by == 'biggest_discount' %}selected{% endif %}>С большими скидками</option>
-        </select>
-    </div>
-    <h6>Категория</h6>
-    <div class="input-group mb-3" style="min-width: 170px; width: 100%;">
-        <select name="category_id" class="form-select" id="category" onchange="document.getElementById('filterForm').submit()">
-            <option style="font-size: 24px;" value="">Все категории</option>
-            {% for category in categories %}
-                <option style="font-size: 24px;" value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <h6>Пол</h6>
-    <div class="input-group mb-3">
-        <select name="gender_id" class="form-select" id="gender" onchange="document.getElementById('filterForm').submit()">
-            <option style="font-size: 24px;" value="">Все полы</option>
-            {% for gender in genders %}
-                <option style="font-size: 24px;" value="{{ gender.id }}" {% if selected_gender == gender.id %}selected{% endif %}>
-                    {{ gender.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <h6>Страна</h6>
-    <div class="input-group mb-3">
-        <select name="country_id" class="form-select" id="country" onchange="document.getElementById('filterForm').submit()">
-            <option style="font-size: 24px;" value="">Все страны</option>
-            {% for country in countries %}
-                <option style="font-size: 24px;" value="{{ country.id }}" {% if selected_country == country.id %}selected{% endif %}>
-                    {{ country.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <h6>Российский размер</h6>
-    <div class="input-group mb-3">
-        <select name="size_id" class="form-select" id="size" onchange="document.getElementById('filterForm').submit()">
-            <option style="font-size: 24px;" value="">Все размеры</option>
-            {% for size in sizes %}
-                <option style="font-size: 24px;" value="{{ size.id }}" {% if selected_size == size.id %}selected{% endif %}>
-                    {{ size.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <h6>Сезон</h6>
-    <div class="input-group mb-3">
-        <select name="season_id" class="form-select" id="season" onchange="document.getElementById('filterForm').submit()">
-            <option style="font-size: 24px;" value="">Все сезоны</option>
-            {% for season in seasons %}
-                <option style="font-size: 24px;" value="{{ season.id }}" {% if selected_season == season.id %}selected{% endif %}>
-                    {{ season.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-</form>
+        <h6>Сортировка</h6>
+        <div class="input-group mb-3">
+            <select name="sort_by" class="form-select" id="sort_by" onchange="document.getElementById('filterForm').submit()">
+                <option value="newness" {% if sort_by == 'newness' %}selected{% endif %}>Новинки</option>
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Дешевле</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Дороже</option>
+                <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Старые</option>
+                <option value="biggest_discount" {% if sort_by == 'biggest_discount' %}selected{% endif %}>С большими скидками</option>
+            </select>
+        </div>
+        <h6>Категория</h6>
+        <div class="input-group mb-3" style="min-width: 170px; width: 100%;">
+            <select name="category_id" class="form-select" id="category" onchange="document.getElementById('filterForm').submit()">
+                <option style="font-size: 24px;" value="">Все категории</option>
+                {% for category in categories %}
+                    <option style="font-size: 24px;" value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <h6>Пол</h6>
+        <div class="input-group mb-3">
+            <select name="gender_id" class="form-select" id="gender" onchange="document.getElementById('filterForm').submit()">
+                <option style="font-size: 24px;" value="">Все полы</option>
+                {% for gender in genders %}
+                    <option style="font-size: 24px;" value="{{ gender.id }}" {% if selected_gender == gender.id %}selected{% endif %}>
+                        {{ gender.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <h6>Страна</h6>
+        <div class="input-group mb-3">
+            <select name="country_id" class="form-select" id="country" onchange="document.getElementById('filterForm').submit()">
+                <option style="font-size: 24px;" value="">Все страны</option>
+                {% for country in countries %}
+                    <option style="font-size: 24px;" value="{{ country.id }}" {% if selected_country == country.id %}selected{% endif %}>
+                        {{ country.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <h6>Российский размер</h6>
+        <div class="input-group mb-3">
+            <select name="size_id" class="form-select" id="size" onchange="document.getElementById('filterForm').submit()">
+                <option style="font-size: 24px;" value="">Все размеры</option>
+                {% for size in sizes %}
+                    <option style="font-size: 24px;" value="{{ size.id }}" {% if selected_size == size.id %}selected{% endif %}>
+                        {{ size.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <h6>Сезон</h6>
+        <div class="input-group mb-3">
+            <select name="season_id" class="form-select" id="season" onchange="document.getElementById('filterForm').submit()">
+                <option style="font-size: 24px;" value="">Все сезоны</option>
+                {% for season in seasons %}
+                    <option style="font-size: 24px;" value="{{ season.id }}" {% if selected_season == season.id %}selected{% endif %}>
+                        {{ season.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        </form>
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-4">
-        {% for product in products %}
-        <div class="col">
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
-                <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
-                    <div class="image-container">
-                        <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
+                            <div class="image-container">
+                                <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #000">{{ product.title }}</h6>
+                                <div class="d-flex" style="align-items: center; place-content: end;">
+                                    {% if product.price_discount and product.price_discount < product.price %}
+                                        {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
+                                        {% if discount_percentage > 50 %}
+                                            <p style="padding: 5px 10px; background-color: red; border-radius: 5px; font-weight: 700; position: absolute; top: 2%; color: #fff">Распродажа</p>
+                                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ product.price_discount }}₽</h3>
+                                        {% else %}
+                                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ product.price_discount }}₽</h3>
+                                        {% endif %}
+                                        <h5 style="font-size: 1rem; color: #99a3ae; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
+                                        <span style="color: red;">-{{ discount_percentage }}%</span>
+                                    {% else %}
+                                        <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ product.price }}₽</h3>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #000">{{ product.title }}</h6>
-                        <div class="d-flex" style="align-items: center; place-content: end;">
-                            {% if product.price_discount and product.price_discount < product.price %}
-                                {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
-                                {% if discount_percentage > 50 %}
-                                    <p style="padding: 5px 10px; background-color: red; border-radius: 5px; font-weight: 700; position: absolute; top: 2%; color: #fff">Распродажа</p>
-                                    <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ product.price_discount }}₽</h3>
-                                {% else %}
-                                    <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ product.price_discount }}₽</h3>
-                                {% endif %}
-                                <h5 style="font-size: 1rem; color: #99a3ae; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
-                                <span style="color: red;">-{{ discount_percentage }}%</span>
-                            {% else %}
-                                <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ product.price }}₽</h3>
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
+                </div>
+            {% endfor %}
             </div>
-        </div>
-        {% endfor %}
-        </div>
     {% else %}
         <h1>Сегодня нет товаров</h1>
     {% endif %}

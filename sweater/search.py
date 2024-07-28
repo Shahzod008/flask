@@ -19,7 +19,7 @@ def search():
     else:
         products = []
 
-    num_product = len(products)
+    product = products
     favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
 
     highlighted_products = []
@@ -34,7 +34,7 @@ def search():
     return render_template(
         "search_results.html",
         products=highlighted_products,
-        num_product=num_product,
+        num_product=product,
         favorite_product_ids=favorite_product_ids,
         query=query
     )

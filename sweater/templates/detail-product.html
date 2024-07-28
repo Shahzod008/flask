@@ -69,8 +69,7 @@
     </div>
 
 
-{% if num_similar_products <= 0 %}
-{% else %}
+{% if similar_products %}
 <hr>
 <h3>Похожие товары</h3>
 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-4 " >
@@ -96,7 +95,7 @@
         </div>
         {% endfor %}
     </div>
-    {% endif %}
+{% endif %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

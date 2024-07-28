@@ -112,6 +112,14 @@ class CartItem(db.Model):
     product = db.relationship('Product')
 
 
+class UserImage(db.Model):
+    __tablename__ = "user_image"
+
+    id = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.String, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+
+
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
@@ -119,6 +127,12 @@ class User(db.Model, UserMixin):
 
     login = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=True)
+
+    address = db.Column(db.String, nullable=True)
+    phone = db.Column(db.String(15), nullable=True)
+    firstname = db.Column(db.String(50), nullable=True)
+    lastname = db.Column(db.String(50), nullable=True)
 
     is_admin = db.Column(db.Boolean, default=False)
 
@@ -126,3 +140,5 @@ class User(db.Model, UserMixin):
 
     favorites = db.relationship('Favorite', back_populates='user')
     cart_items = db.relationship('CartItem', back_populates='user', lazy='dynamic')
+
+    profile_image = db.Column(db.String(255), nullable=True)

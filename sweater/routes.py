@@ -3,6 +3,7 @@ from sweater.favorite_cart import *
 from sweater.reg_auth import *
 from sweater.product import *
 from sweater.search import *
+from sweater.user import *
 
 
 @app.route("/")
