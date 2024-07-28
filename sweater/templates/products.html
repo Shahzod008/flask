@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<div class="d-flex">
     {% if products %}
+
+<div class="d-flex">
         <form method="GET" action="/product" class="needs-validation" style="margin-right: 10px; max-width: 200px; width: 100%;" id="filterForm">
         <h6>Сортировка</h6>
         <div class="input-group mb-3">
@@ -74,7 +75,7 @@
             </select>
         </div>
         </form>
-        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4">
             {% for product in products %}
                 <div class="col">
                     <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
@@ -105,9 +106,10 @@
                 </div>
             {% endfor %}
             </div>
+</div>
+
     {% else %}
         <h1>Сегодня нет товаров</h1>
     {% endif %}
-</div>
 
 {% endblock %}

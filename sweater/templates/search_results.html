@@ -6,7 +6,7 @@
 
 {% block body %}
     <h1 class="my-4">Результаты поиска</h1>
-    {% if product %}
+    {% if products %}
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-4">
         {% for item in products %}
         <div class="col">
@@ -33,6 +33,6 @@
         {% endfor %}
     </div>
     {% else %}
-    <p>Нет результатов для запроса "{{ query }}"</p>
+    <p>Нет результатов для запроса "{{query}}"</p>
     {% endif %}
 {% endblock %}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+
+<h2>Введите адрес:</h2>
+<input type="text" id="address" autocomplete="off">
+<div id="suggestions"></div>
+
+<script>
+    $(function() {
+        console.log("Script loaded"); // Убедитесь, что скрипт загружен
+        $("#address").on("input", function() {
+            var query = $(this).val();
+            if (query.length > 2) {
+                $.get("/autocomplete", { query: query }, function(data) {
+                    var suggestions = data.suggestions || [];
+                    console.log("Received suggestions:", suggestions);  // Отладочное сообщение
+                    $("#suggestions").empty();
+                    suggestions.forEach(function(item) {
+                        $("<div>").text(item.value).appendTo("#suggestions").on("click", function() {
+                            $("#address").val(item.value);
+                            $("#suggestions").empty();
+                        });
+                    });
+                }).fail(function(xhr, status, error) {
+                    console.error("Failed to fetch suggestions:", status, error);  // Отладочное сообщение
+                });
+            } else {
+                $("#suggestions").empty();
+            }
+        });
+    });
+</script>
+</body>
+</html>

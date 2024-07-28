@@ -6,7 +6,12 @@
 
 {% block body %}
 
-{% if products %}
+
+{% if num_product <= 0 %}
+<h2>Мой стиль - Магазин одежды</h2>
+<p>Товары закончились, зайдите позже.</p>
+    {% else %}
+
 <div style="display: flex; margin-bottom: 20px; justify-content: space-between; align-items: center; ">
     <div style="overflow-x: auto; display: flex; margin-right: 15px; grid-gap: 5px; padding: 5px;">
         {% for category in categories %}
@@ -17,38 +22,36 @@
     </div>
 </div>
 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-4">
-    {% for product in products %}
-    <div class="col">
-        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
-                <div class="image-container">
-                    <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #000">{{ product.title }}</h6>
-                    <div class="d-flex" style="align-items: center; place-content: end;">
-                        {% if product.price_discount and product.price_discount < product.price %}
-                            {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
-                            {% if discount_percentage > 50 %}
-                                <p style="padding: 5px 10px; background-color: red; border-radius: 5px; font-weight: 700; position: absolute; top: 2%; color: #fff">Распродажа</p>
-                                <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ product.price_discount }}₽</h3>
-                            {% else %}
-                                <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ product.price_discount }}₽</h3>
-                            {% endif %}
-                            <h5 style="font-size: 1rem; color: #99a3ae; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
-                            <span style="color: red;">-{{ discount_percentage }}%</span>
-                        {% else %}
-                            <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ product.price }}₽</h3>
-                        {% endif %}
+            {% for product in products %}
+                <div class="col">
+                    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <a href="{{ url_for('detail_product', id=product.id) }}" class="text-decoration-none text-dark">
+                            <div class="image-container">
+                                <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #000">{{ product.title }}</h6>
+                                <div class="d-flex" style="align-items: center; place-content: end;">
+                                    {% if product.price_discount and product.price_discount < product.price %}
+                                        {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
+                                        {% if discount_percentage > 50 %}
+                                            <p style="padding: 5px 10px; background-color: red; border-radius: 5px; font-weight: 700; position: absolute; top: 2%; color: #fff">Распродажа</p>
+                                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ product.price_discount }}₽</h3>
+                                        {% else %}
+                                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ product.price_discount }}₽</h3>
+                                        {% endif %}
+                                        <h5 style="font-size: 1rem; color: #99a3ae; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
+                                        <span style="color: red;">-{{ discount_percentage }}%</span>
+                                    {% else %}
+                                        <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ product.price }}₽</h3>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
-            </a>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% else %}
-<h2>Мой стиль - Магазин одежды</h2>
-<p>Товары закончились, зайдите позже.</p>
+            {% endfor %}
+            </div>
+
 {% endif %}
 {% endblock %}

@@ -62,24 +62,15 @@ def detail_product(id):
     favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
     cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=id).first() if current_user.is_authenticated else None
 
-    # Подборка похожих товаров на основе категории и сезона
-    similar_products = Product.query.filter(
-        (Product.category_id == product.category_id) |
-        (Product.season_id == product.season_id),
-        Product.id != product.id
-    ).limit(5).all()
-
     return render_template(
         "detail-product.html",
         favorite_product_ids=favorite_product_ids,
         cart_item=cart_item,
-        product=product,
-        similar_products=similar_products,
-        similar_products=similar_products
+        product=product
     )
 
 
-@app.route("/product/img-user-ava/<filename>")
+@app.route("/product/img/<filename>")
 def product_image(filename):
     return send_from_directory(*get_path_for_image(filename, True))
 
@@ -151,7 +142,6 @@ def products():
         selected_gender=selected_gender,
         sort_by=sort_by
     )
-
 
 
 @app.route('/delete-product/<int:id>')
