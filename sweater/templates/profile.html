@@ -1,45 +1,17 @@
 {% extends "base.html" %}
 
 {% block body %}
-
-<style>
-#suggestions {
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-#suggestions .list-group-item {
-    padding: 10px;  /* Увеличьте внутренние отступы для удобства */
-    cursor: pointer;  /* Курсор в виде руки, чтобы указать на интерактивность */
-}
-
-#suggestions .list-group-item:hover {
-    background-color: #f1f1f1;  /* Изменение фона при наведении мыши */
-}
-
-
-</style>
-
-
-<div class="container mt-4 profile-container">
+<div class="mt-4 profile-container">
     <div class="row">
         <!-- Личная информация и кнопка редактирования -->
         <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body text-center">
-{% if current_user.profile_image %}
-    <img src="{{ url_for('profile_image', filename=current_user.profile_image) }}" alt="Profile Picture" class="rounded-circle mb-3" width="150">
-{% else %}
-    <img src="{{ url_for('static', filename='img-user-ava/image-ava.jpg') }}" alt="Default Profile Picture" class="rounded-circle mb-3" width="150">
-{% endif %}
-
+                    {% if current_user.profile_image %}
+                        <img src="{{ url_for('profile_image', filename=current_user.profile_image) }}" alt="Profile Picture" class="rounded-circle mb-3" width="150">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img-user-ava/image-ava.jpg') }}" alt="Default Profile Picture" class="rounded-circle mb-3" width="150">
+                    {% endif %}
                     <h5 class="card-title">{{current_user.firstname}} {{current_user.lastname}}</h5>
                     <p class="card-text">{{current_user.email}}</p>
                 </div>
@@ -48,9 +20,10 @@
                     <li class="list-group-item"><strong>Телефон:</strong> {{current_user.phone }}</li>
                     <li class="list-group-item"><strong>Адрес:</strong> {{current_user.address }}</li>
                 </ul>
-                <div class="card-body">
-                    <button type="button" class="btn btn-primary" onclick="toggleEditForm()">Редактировать профиль</button>
-                    <a href="/logout" class="btn btn-danger">Выйти</a>
+                <div class="card-body text-center">
+                    <a class="btn btn-outline-primary btn-sm m-2" onclick="toggleEditForm()">Редактировать профиль</a>
+                    <a class="btn btn-danger btn-sm m-2">Удалить аккаунт</a>
+                    <a href="/logout" class="btn btn-outline-danger btn-sm m-2">Выйти</a>
                 </div>
             </div>
         </div>
@@ -70,7 +43,6 @@
                                 <label for="fname" class="form-label">Имя</label>
                                 <input type="text" class="form-control" id="fname" name="fname" placeholder="Имя" value="{{current_user.firstname}}">
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label for="lname" class="form-label">Фамилия</label>
                                 <input type="text" class="form-control" id="lname" name="lname" placeholder="Фамилия" value="{{current_user.lastname}}">
@@ -83,22 +55,19 @@
                                 <label for="email" class="form-label">Электронная почта</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" value="{{current_user.email}}">
                             </div>
-    <label for="address" class="form-label">Укажите адрес</label>
-    <input type="text" class="form-control" id="address" name="address" placeholder="Москва, Красная площадь, 1">
-
-
-
-                        </div>
                             <div class="col-md-6 mb-3">
-                            <label for="profile_picture" class="form-label">Изображение профиля</label>
-                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept=".png,.jpg,.jpeg,.bmp">
+                                <label for="address" class="form-label">Укажите адрес</label>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="Москва, Красная площадь, 1">
+                            </div>
+                            <div>
+                                <label for="profile_picture" class="form-label">Изображение профиля</label>
+                                <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept=".png,.jpg,.jpeg,.bmp">
+                            </div>
                         </div>
+
                         <button type="submit" class="btn btn-primary" name="update_profile">Обновить профиль</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="toggleChangePasswordForm()">Изменить пароль</button>
                     </form>
-
-                    <hr>
-
-                    <button type="button" class="btn btn-secondary" onclick="toggleChangePasswordForm()">Изменить пароль</button>
                     <div id="change-password-form" class="mt-3" style="display: none;">
                         <form method="POST" action="/profile/change_password/">
                             <div class="mb-3">
