@@ -6,58 +6,80 @@
 
 {% block body %}
 
+
 {% if cart_items %}
-<div class="container mt-4">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Товар</th>
-                <th scope="col">Количество</th>
-                <th scope="col">Цена</th>
-                <th scope="col">Удалить</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td style="align-content: center;" >
-                    <a href="{{ url_for('detail_product', id=item.product.id) }}" class="text-decoration-none text-dark d-flex align-items-center">
-                        <img src="/product/img/{{ item.product.images[0].image }}" alt="{{ item.product.title }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5%; margin-right: 10px;">
-                        {{ item.product.title }}
-                    </a>
-                </td>
-                <td style="align-content: center;" >
-                    <form action="{{ url_for('update_cart', cart_item_id=item.id) }}" method="POST" class="d-flex align-items-center">
-                        <button type="button" onclick="updateQuantity(this, -1)" class="btn btn-outline-secondary">-</button>
-                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control text-center mx-2" style="width: 60px;" onchange="this.form.submit()">
-                        <button type="button" onclick="updateQuantity(this, 1)" class="btn btn-outline-secondary">+</button>
+<div class="container">
+
+<div class="row">
+    <div class="col-md-9 mb-2">
+    <ul class="list-group">
+        {% for item in cart_items %}
+            <li class="shadow-sm list-group-item justify-content-between align-items-center">
+            <a href="{{ url_for('detail_product', id=item.product.id) }}" class="text-decoration-none align-items-center text-dark d-flex">
+                <img src="/product/img/{{ item.product.images[0].image }}" style="width: 90px; object-fit: cover; border-radius: 5%; margin-right: 10px;">
+                <div>
+                    {% if item.product.price_discount < item.product.price %}
+                        {% set discount_percentage = (100 - (item.product.price_discount / item.product.price) * 100) | round() %}
+                        {% if discount_percentage > 50 %}
+                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ item.product.price_discount * item.quantity}}₽</h3>
+                        {% else %}
+                            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ item.product.price_discount * item.quantity}}₽</h3>
+                        {% endif %}
+                    {% else %}
+                        <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ item.product.price * item.quantity }}₽</h3>
+                    {% endif %}
+                    <p style="line-break: anywhere;">{{ item.product.title }}</p>
+                </div>
+            </a>
+                <hr>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <div class="d-flex">
+                    <form class="m-1" action="{{ url_for('add_to_favorites', product_id=item.product.id) }}" method="POST">
+                        <button style="background: rgba(0, 48, 120, 0.06); color: rgba(0, 26, 52, 1); border: none; border-radius: 8px; height: 44px; justify-content: center; min-width: 44px;">
+                            <svg width="16" height="16">
+                                <path fill="currentColor" d="M16 6.022C16 3.457 14.052 1.5 11.5 1.5c-1.432 0-2.665.799-3.5 1.926C7.165 2.299 5.932 1.5 4.5 1.5 1.948 1.5 0 3.457 0 6.022c0 2.457 1.66 4.415 3.241 5.743 1.617 1.358 3.387 2.258 4.062 2.577.444.21.95.21 1.394 0 .675-.32 2.445-1.219 4.062-2.577C14.339 10.437 16 8.479 16 6.022"></path>
+                            </svg>
+                        </button>
                     </form>
-                </td>
-                <td style="align-content: center;" ><a href="{{ url_for('detail_product', id=item.product.id) }}" class="text-decoration-none text-dark d-flex align-items-center">{{ item.product.price * item.quantity }}₽</a></td>
-                <td style="align-content: center;" >
-                    <form action="{{ url_for('remove_from_cart', cart_item_id=item.id) }}" method="POST">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="2" class="text-end"><strong>Итого:</strong></td>
-                <td colspan="2">{{ total_price }}₽</td>
-            </tr>
-        </tbody>
-    </table>
-    <a href="#" class="btn btn-success">Перейти к оформлению</a>
+                    <form class="m-1" action="{{ url_for('remove_from_cart', cart_item_id=item.id) }}" method="POST">
+                    <button style="background: rgba(0, 48, 120, 0.06); color: rgba(0, 26, 52, 1); border: none; border-radius: 8px; height: 44px; justify-content: center; min-width: 44px;">
+                        <svg width="16" height="16">
+                            <path fill="currentColor" d="m4.888 3.035.275-.826A2.5 2.5 0 0 1 7.535.5h.93a2.5 2.5 0 0 1 2.372 1.71l.275.825c2.267.09 3.555.406 3.555 1.527 0 .938-.417.938-1.25.938H2.583c-.833 0-1.25 0-1.25-.937 0-1.122 1.288-1.438 3.555-1.528m1.856-.299-.088.266Q7.295 3 8 3t1.345.002l-.089-.266a.83.83 0 0 0-.79-.57h-.931a.83.83 0 0 0-.79.57M2.167 7.167c0-.6.416-.834.833-.834h10c.417 0 .833.235.833.834 0 6.666-.416 8.333-5.833 8.333s-5.833-1.667-5.833-8.333m4.166 1.666a.833.833 0 0 0-.833.834v1.666a.833.833 0 1 0 1.667 0V9.667a.833.833 0 0 0-.834-.834m4.167.834a.833.833 0 1 0-1.667 0v1.666a.833.833 0 1 0 1.667 0z"></path>
+                        </svg>
+                    </button>
+                </form>
+                </div>
+                <form action="{{ url_for('update_cart', cart_item_id=item.id) }}" method="POST" class="d-flex align-items-center">
+                    <button type="button" onclick="updateQuantity(this, -1)" class="btn btn-outline-secondary">-</button>
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control text-center mx-2" style="width: 60px;" onchange="this.form.submit()">
+                    <button type="button" onclick="updateQuantity(this, 1)" class="btn btn-outline-secondary">+</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    </div>
+
+    <div style="height: max-content;" class="col-md-3">
+        <div class="d-flex">
+            <p><strong>Итого:</strong></p>
+            <p class="ml-2">{{ total_price }}₽</p>
+        </div>
+        <a href="#" class="btn btn-success">Перейти к оформлению</a>
+    </div>
+
+</div>
 </div>
 
+
 {% else %}
-    <h2>Корзина пуста</h2>
-    <p>Воспользуйтесь поиском, чтобы найти всё, что нужно</p>
-    <a class="btn btn-outline-primary" href="/" role="button">Начать покупку</a>
+<h2>Корзина пуста</h2>
+<p>Воспользуйтесь поиском, чтобы найти всё, что нужно</p>
+<a class="btn btn-outline-primary" href="/" role="button">Начать покупку</a>
 {% endif %}
 
 <script>
-function updateQuantity(button, change) {
+    function updateQuantity(button, change) {
     var input = button.parentElement.querySelector('input[name="quantity"]');
     var newValue = parseInt(input.value) + change;
     if (newValue > 0) {

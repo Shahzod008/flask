@@ -30,9 +30,9 @@
                                 <img src="/product/img/{{ product.images[0].image }}" class="card-img-top" alt="{{ product.title }}">
                             </div>
                             <div class="card-body d-flex flex-column">
-                                <h6 class="my-0 text-truncate" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: #000">{{ product.title }}</h6>
+                                <h6 class="my-0" style="font-size: 1.2rem;  margin-bottom: 10px; color: #000">{{ product.title }}</h6>
                                 <div class="d-flex" style="align-items: center; place-content: end;">
-                                    {% if product.price_discount and product.price_discount < product.price %}
+                                    {% if product.price_discount < product.price %}
                                         {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
                                         {% if discount_percentage > 50 %}
                                             <p style="padding: 5px 10px; background-color: red; border-radius: 5px; font-weight: 700; position: absolute; top: 2%; color: #fff">Распродажа</p>
