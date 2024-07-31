@@ -3,91 +3,140 @@
 {% block title %}{{ product.title }}{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-6">
-            <div id="productImagesFor{{ product.id }}">
-                <div id="carouselExampleControls{{ product.id }}" class="carousel slide mt-3" data-bs-ride="carousel">
-                    <div class="carousel-inner" style="max-width: 500px; width: 100%;">
-                        {% for image in product.images %}
-                        <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
-                            <img src="{{ url_for('product_image', filename=image.image) }}" class="d-block w-100">
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="d-flex flex-wrap">
+<div class="row">
+    <div class="col-md-6">
+        <div id="productImagesFor{{ product.id }}">
+            <div id="carouselExampleControls{{ product.id }}" class="carousel slide mt-3" data-bs-ride="carousel">
+                <div class="carousel-inner" style="max-width: 500px; width: 100%;">
                     {% for image in product.images %}
-                    <div class="thumbnail-wrapper" style="max-width: 100px; width: 100%; margin: 10px;">
-                        <img src="{{ url_for('product_image', filename=image.image) }}" class="img-thumbnail" style="cursor: pointer;" data-bs-target="#carouselExampleControls{{ product.id }}" data-bs-slide-to="{{ loop.index0 }}">
+                    <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
+                        <img src="{{ url_for('product_image', filename=image.image) }}" class="d-block w-100">
                     </div>
                     {% endfor %}
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <h2 style="line-break: anywhere;">{{ product.title }}</h2>
-            <div class="card-title d-flex align-items-center">
-                {% if product.price_discount < product.price %}
-                {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
-                {% if discount_percentage > 50 %}
-                <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ product.price_discount }}₽</h3>
-                {% else %}
-                <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ product.price_discount }}₽</h3>
-                {% endif %}
-                <h5 style="font-size: 1rem; color: #99a3ae; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
-                <span style="color: red;">-{{ discount_percentage }}%</span>
-                {% else %}
-                <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ product.price }}₽</h3>
-                {% endif %}</div>
-            <div class="mt-4 d-flex gap-2">
-                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="d-flex">
-                    <button style="font-size: 14px; padding: 10px;" class="btn btn-lg btn-outline-primary" type="submit">
-                        Добавить в корзину
-                    </button>
-                </form>
-                <form action="{% if product.id in favorite_product_ids %}{{ url_for('remove_from_favorites', product_id=product.id) }}{% else %}{{ url_for('add_to_favorites', product_id=product.id) }}{% endif %}" method="POST" class="d-inline ms-2">
-                    <button style="font-size: 14px; padding: 10px;" class="btn btn-lg {% if product.id in favorite_product_ids %}btn-outline-danger{% else %}btn-outline-secondary{% endif %}" type="submit">
-                        {% if product.id in favorite_product_ids %}
-                        Удалить из избранного
-                        {% else %}
-                        Добавить в избранное
-                        {% endif %}
-                    </button>
-                </form>
-                {% if current_user.is_admin %}
-                <a href="{{ url_for('delete_product', id=product.id) }}" class="btn btn-outline-danger" style="margin-left: 10px; align-content: center;">Удалить</a>
-                {% endif %}
-            </div>
-
-            <br>
-
-            <div class="card-body">
-                <p>{{ product.description|safe }}</p>
-                <p> Цена {{ product.price|safe }}</p>
-                <p> Идеал {{ product.ideal|safe }}</p>
-                <p> Категория {{ product.category.name }}</p>
-                <p> Сезон {{ product.season.name }}</p>
-                <p> Размер {{ product.size.name }}</p>
-                <p> Пол {{ product.gender.name }}</p>
-                <p> Страна {{ product.country.name }}</p>
-                <span style="background-color: {{ product.color }}; display: inline-block; width: 50px; height: 50px;"></span>
-                <p> Скидочная цена {{ product.price_discount|safe }}</p>
-                <p> Габариты {{ product.package_size|safe }}</p>
-                <p> Бренд {{ product.brand|safe }}</p>
-                <p> Ключевые слова {{ product.keywords|safe }}</p>
+            <div class="d-flex flex-wrap">
+                {% for image in product.images %}
+                <div class="thumbnail-wrapper" style="max-width: 100px; width: 100%; margin: 10px;">
+                    <img src="{{ url_for('product_image', filename=image.image) }}" class="img-thumbnail" style="cursor: pointer;" data-bs-target="#carouselExampleControls{{ product.id }}" data-bs-slide-to="{{ loop.index0 }}">
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <h2 style="line-break: anywhere;">{{ product.title }}</h2>
+        <div class="card-title d-flex align-items-center">
+            {% if product.price_discount < product.price %}
+            {% set discount_percentage = (100 - (product.price_discount / product.price) * 100) | round() %}
+            {% if discount_percentage > 50 %}
+            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: red;">{{ product.price_discount }}₽</h3>
+            {% else %}
+            <h3 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: #10c44c;">{{ product.price_discount }}₽</h3>
+            {% endif %}
+            <h5 style="font-size: 1rem; color: #99a3ae; font-weight: 700; text-decoration: line-through; align-self: center; margin: 5px;">{{ product.price }}₽</h5>
+            <span style="color: red;">-{{ discount_percentage }}%</span>
+            {% else %}
+            <h3 style="font-size: 1.4rem; font-weight: 700; color: #10c44c;">{{ product.price }}₽</h3>
+            {% endif %}</div>
+        <div class="mt-2 d-flex gap-2">
+            <form action="{% if cart_item %}{{ url_for('remove_from_cart', cart_item_id=cart_item.id) }}{% else %}{{ url_for('add_to_cart', product_id=product.id) }}{% endif %}" method="POST" class="d-inline ms-2">
+                <button style="font-size: 14px; padding: 10px;" class="btn btn-lg {% if cart_item %}btn-outline-danger{% else %}btn-outline-primary{% endif %}" type="submit">
+                    {% if cart_item %}
+                    Удалить из корзины
+                    {% else %}
+                    Добавить в корзину
+                    {% endif %}
+                </button>
+            </form>
+            <form action="{% if product.id in favorite_product_ids %}{{ url_for('remove_from_favorites', product_id=product.id) }}{% else %}{{ url_for('add_to_favorites', product_id=product.id) }}{% endif %}" method="POST" class="d-inline ms-2">
+                <button style="font-size: 14px; padding: 10px;" class="btn btn-lg {% if product.id in favorite_product_ids %}btn-outline-danger{% else %}btn-outline-secondary{% endif %}" type="submit">
+                    {% if product.id in favorite_product_ids %}
+                    Удалить из избранного
+                    {% else %}
+                    Добавить в избранное
+                    {% endif %}
+                </button>
+            </form>
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('delete_product', id=product.id) }}" class="btn btn-outline-danger" style="margin-left: 10px; align-content: center;">Удалить</a>
+            {% endif %}
+        </div>
+        <br>
+    </div>
+    <div>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<div id="section-characteristics" class="container mt-4">
+    <h2><a href="https://www.ozon.ru/product/kostyum-sportivnyy-2mily-1469847664/features/">Характеристики</a></h2>
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-5">Артикул</dt>
+                <dd class="col-sm-7">{{ product.id }}</dd>
+
+                <dt class="col-sm-5">Сезон</dt>
+                <dd class="col-sm-7">{{ product.season.name }}</dd>
+
+                <dt class="col-sm-5">Материал</dt>
+                <dd class="col-sm-7">product.mateiaаку</dd>
+
+                <dt class="col-sm-5">Тип</dt>
+                <dd class="col-sm-7">{{ product.category.name }}</dd>
+
+<!--                <dt class="col-sm-5">Коллекция</dt>-->
+<!--                <dd class="col-sm-7">product.collection}</dd>-->
+
+                <dt class="col-sm-5">Цвет</dt>
+                <dd class="col-sm-7"><span style="background-color: {{ product.color }}; display: inline-block; width: 50px; height: 20px; border-radius: 8px;"></span></dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-5">Страна</dt>
+                <dd class="col-sm-7">{{ product.country.name }}</dd>
+
+                <dt class="col-sm-5">Пол</dt>
+                <dd class="col-sm-7">{{ product.gender.name }}</dd>
+
+                <dt class="col-sm-5">Срок Гарантии</dt>
+                <dd class="col-sm-7">{{ product.warranty_date }}</dd>
+
+                <dt class="col-sm-5">Габарит упаковки</dt>
+                <dd class="col-sm-7">{{ product.package_size }}</dd>
+
+                <dt class="col-sm-5">Бренд</dt>
+                <dd class="col-sm-7">{{ product.brand }}</dd>
+
+                <dt class="col-sm-5">Размер</dt>
+                <dd class="col-sm-7">{{ product.size.name }}</dd>
+            </dl>
+        </div>
+    </div>
+    <small class="text-muted">Информация о характеристиках товара носит справочный характер.</small>
+</div>
+
+
+    </div>
+    <div id="descript">
+        <h3 style="font-size: 28px; font-weight: 700;">Описание</h3>
+        <p>{{ product.description }}</p>
+    </div>
+</div>
+
+
+
+
 
 
 {% if similar_products %}
 <hr>
 <h3>Похожие товары</h3>
 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-4 " >
-        {% for similar_product in similar_products %}
-        <div class="col-md-3">
-            <div class="card mb-4 shadow-sm">
-                <a href="{{ url_for('detail_product', id=similar_product.id) }}" class="text-decoration-none text-dark">
+    {% for similar_product in similar_products %}
+    <div class="col-md-3">
+        <div class="card mb-4 shadow-sm">
+            <a href="{{ url_for('detail_product', id=similar_product.id) }}" class="text-decoration-none text-dark">
                 <div class="image-container">
                     <img src="/product/img/{{ similar_product.images[0].image }}" class="card-img-top" alt="{{ similar_product.title }}">
                 </div>
@@ -101,11 +150,11 @@
                         {% endif %}
                     </div>
                 </div>
-                </a>
-            </div>
+            </a>
         </div>
-        {% endfor %}
     </div>
+    {% endfor %}
+</div>
 {% endif %}
 
 <script>

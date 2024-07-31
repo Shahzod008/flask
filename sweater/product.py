@@ -59,6 +59,8 @@ def new_product():
 @app.route("/detail-product/<int:id>")
 def detail_product(id):
     product = Product.query.get_or_404(id)
+    cart_product_ids = [item.product_id for item in CartItem.query.filter_by(user_id=current_user.id).all()] if current_user.is_authenticated else []
+
     favorite_product_ids = [fav.product_id for fav in current_user.favorites] if current_user.is_authenticated else []
     cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=id).first() if current_user.is_authenticated else None
 
@@ -66,6 +68,7 @@ def detail_product(id):
         "detail-product.html",
         favorite_product_ids=favorite_product_ids,
         cart_item=cart_item,
+        cart_product_ids=cart_product_ids,
         product=product
     )
 
